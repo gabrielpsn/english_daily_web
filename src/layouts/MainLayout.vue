@@ -61,8 +61,10 @@
         <!-- Logo Grande no topo da Drawer -->
         <div class="q-py-md">
           <q-icon name="workspace_premium" size="48px" color="accent" class="pulse-glow rounded-circle q-pa-sm" style="background: rgba(149, 117, 205, 0.1);" />
-          <div class="text-h6 text-weight-bold font-outfit q-mt-sm">Gabriel</div>
-          <div class="text-caption text-grey-5">Estudante de Inglês</div>
+          <div class="text-h6 text-weight-bold font-outfit q-mt-sm">{{ authStore.displayName }}</div>
+          <div class="text-caption text-grey-5 text-truncate q-px-sm" style="max-width: 240px;">
+            {{ authStore.isAuthenticated ? authStore.userEmail : 'Estudante de Inglês' }}
+          </div>
         </div>
         <q-separator dark class="full-width q-my-sm" />
       </div>
@@ -87,7 +89,7 @@
       </q-list>
 
       <div class="absolute-bottom q-pa-md text-center text-caption text-grey-6 border-top">
-        v1.0.0 • Offline First
+        v1.0.0 • {{ authStore.isAuthenticated ? 'Nuvem Ativa 🟢' : 'Offline First 🟡' }}
       </div>
     </q-drawer>
 
@@ -127,11 +129,13 @@ import { useRouter } from 'vue-router'
 import { useStudyStore } from '../stores/study'
 import { useSettingsStore } from '../stores/settings'
 import { useAchievementsStore } from '../stores/achievements'
+import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
 const studyStore = useStudyStore()
 const settingsStore = useSettingsStore()
 const achievementsStore = useAchievementsStore()
+const authStore = useAuthStore()
 
 const leftDrawerOpen = ref(false)
 const activeTab = ref('dashboard')
@@ -154,10 +158,13 @@ function goToSettings() {
 }
 
 onMounted(() => {
-  // Inicializa os stores
+  // Inicializa os stores locais
   settingsStore.initSettings()
   studyStore.loadStudyData()
   achievementsStore.loadAchievements()
+  
+  // Inicializa conexão e sincronização com Supabase
+  authStore.initAuth()
 })
 </script>
 

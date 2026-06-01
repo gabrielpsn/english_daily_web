@@ -139,14 +139,27 @@ export const useAchievementsStore = defineStore('achievements', {
     },
 
     /**
-     * Salva o status das conquistas no LocalStorage
+     * Salva o status das conquistas no LocalStorage e sincroniza na nuvem se autenticado
      */
     saveAchievements() {
       const saved = storageService.load() || {}
-      saved.achievements = this.achievementsList
+      const unlocked = this.achievementsList
         .filter(a => a.unlocked)
         .map(a => ({ id: a.id, unlockedAt: a.unlockedAt }))
+      saved.achievements = unlocked
       storageService.save(saved)
+
+      // Sincroniza assincronamente com o Supabase se logado (evitando importação circular)
+      import('./auth').then(({ useAuthStore }) => {
+        const authStore = useAuthStore()
+        if (authStore.isAuthenticated) {
+          import('../services/supabase').then(({ supabaseService }) => {
+            supabaseService.saveAchievements(authStore.userId, unlocked).catch(err => {
+              console.error('Erro ao sincronizar conquistas na nuvem:', err)
+            })
+          })
+        }
+      })
     },
 
     /**

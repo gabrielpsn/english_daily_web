@@ -46,7 +46,7 @@ export const useSettingsStore = defineStore('settings', {
     },
 
     /**
-     * Salva as configurações localmente
+     * Salva as configurações localmente e sincroniza na nuvem se autenticado
      */
     saveSettings() {
       const saved = storageService.load() || {}
@@ -60,6 +60,18 @@ export const useSettingsStore = defineStore('settings', {
         speed: this.speed
       }
       storageService.save(saved)
+
+      // Sincroniza assincronamente com o Supabase se logado (evitando importação circular)
+      import('./auth').then(({ useAuthStore }) => {
+        const authStore = useAuthStore()
+        if (authStore.isAuthenticated) {
+          import('../services/supabase').then(({ supabaseService }) => {
+            supabaseService.saveSettings(authStore.userId, this).catch(err => {
+              console.error('Erro ao sincronizar configurações na nuvem:', err)
+            })
+          })
+        }
+      })
     }
   }
 })

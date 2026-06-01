@@ -9,6 +9,169 @@
       <p class="text-caption text-grey-5 q-my-none">Personalize o som de fala, sotaque de inglês e gerencie seus backups locais.</p>
     </div>
 
+    <!-- Seção 0: Conta e Sincronização na Nuvem (Supabase) -->
+    <div class="glass-card q-pa-lg animate-slide-up relative-position overflow-hidden" style="animation-delay: 0.05s;">
+      <!-- Glowing glass border decoration -->
+      <div class="absolute-top-right q-ma-sm text-caption text-grey-5 gt-xs">
+        <q-icon name="cloud" size="16px" class="q-mr-xs" />
+        Sincronização Cloud
+      </div>
+
+      <h2 class="text-h6 text-weight-bold font-outfit q-my-none q-mb-md text-white flex items-center">
+        <q-icon :name="authStore.isAuthenticated ? 'cloud_done' : 'cloud_sync'" color="accent" size="22px" class="q-mr-sm" :class="{ 'animate-pulse': authStore.syncing }" />
+        Sincronização & Conta
+      </h2>
+
+      <!-- Cenário A: Usuário Logado -->
+      <div v-if="authStore.isAuthenticated" class="row q-col-gutter-md items-center">
+        <div class="col-12 col-sm-7">
+          <div class="row items-center q-gutter-x-md">
+            <q-avatar size="56px" class="pulse-glow" style="background: rgba(149, 117, 205, 0.15);">
+              <q-icon name="account_circle" size="48px" color="accent" />
+            </q-avatar>
+            <div>
+              <div class="text-h6 text-weight-bold text-white font-outfit">{{ authStore.displayName }}</div>
+              <div class="text-caption text-grey-4 flex items-center text-truncate" style="max-width: 240px;">
+                <q-icon name="email" size="14px" class="q-mr-xs text-grey-5" />
+                {{ authStore.userEmail }}
+              </div>
+            </div>
+          </div>
+          <div class="q-mt-md text-body2 text-grey-4">
+            <span class="text-green-4 text-weight-bold flex items-center">
+              <q-icon name="sync" size="16px" class="q-mr-xs animate-spin-slow" />
+              Sincronização em Nuvem ativa e operacional!
+            </span>
+            <div class="text-caption text-grey-5 q-mt-xs">Seu progresso de estudos, anotações diárias e medalhas estão seguros no Supabase.</div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-5 flex flex-column q-gutter-y-sm justify-center">
+          <div class="row q-col-gutter-xs">
+            <div class="col-6">
+              <q-btn
+                outline
+                color="info"
+                icon="cloud_download"
+                label="Baixar Cloud"
+                class="font-outfit text-weight-bold full-width rounded-borders text-xs"
+                :loading="authStore.syncing"
+                @click="forceSyncDown"
+              >
+                <q-tooltip>Sobrescrever dados locais com os dados salvos na Nuvem</q-tooltip>
+              </q-btn>
+            </div>
+            <div class="col-6">
+              <q-btn
+                outline
+                color="accent"
+                icon="cloud_upload"
+                label="Subir Local"
+                class="font-outfit text-weight-bold full-width rounded-borders text-xs"
+                :loading="authStore.syncing"
+                @click="forceSyncUp"
+              >
+                <q-tooltip>Subir o progresso deste navegador para consolidar na Nuvem</q-tooltip>
+              </q-btn>
+            </div>
+          </div>
+
+          <q-btn
+            unelevated
+            color="negative"
+            icon="logout"
+            label="Desconectar Conta"
+            class="font-outfit text-weight-bold full-width rounded-borders q-mt-xs"
+            :loading="authStore.loading"
+            @click="handleLogout"
+          />
+        </div>
+      </div>
+
+      <!-- Cenário B: Usuário Deslogado -->
+      <div v-else>
+        <p class="text-body2 text-grey-4 q-mb-md">
+          Conecte sua conta para habilitar o backup automático na nuvem. Estude offline de forma fluida e sincronize seu progresso, anotações e medalhas entre todos os seus dispositivos.
+        </p>
+
+        <!-- Abas Login / Cadastro -->
+        <q-tabs
+          v-model="authTab"
+          dense
+          class="text-grey-4 q-mb-md rounded-borders glass-card-flat"
+          active-color="accent"
+          indicator-color="accent"
+          align="left"
+        >
+          <q-tab name="login" label="Entrar na Conta" icon="login" class="font-outfit" />
+          <q-tab name="register" label="Criar Nova Conta" icon="person_add" class="font-outfit" />
+        </q-tabs>
+
+        <!-- Formulários de Auth -->
+        <q-form @submit.prevent="authTab === 'login' ? handleLogin() : handleRegister()" class="q-gutter-y-sm">
+          <!-- Campo Nome (Somente Cadastro) -->
+          <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <q-input
+              v-if="authTab === 'register'"
+              v-model="fullName"
+              filled
+              dark
+              label="Nome Completo"
+              class="custom-input"
+              required
+            >
+              <template v-slot:prepend>
+                <q-icon name="person" color="accent" />
+              </template>
+            </q-input>
+          </transition>
+
+          <!-- E-mail -->
+          <q-input
+            v-model="email"
+            filled
+            dark
+            type="email"
+            label="Endereço de E-mail"
+            class="custom-input"
+            required
+          >
+            <template v-slot:prepend>
+              <q-icon name="mail" color="accent" />
+            </template>
+          </q-input>
+
+          <!-- Senha -->
+          <q-input
+            v-model="password"
+            filled
+            dark
+            type="password"
+            label="Senha de Acesso"
+            class="custom-input"
+            required
+          >
+            <template v-slot:prepend>
+              <q-icon name="lock" color="accent" />
+            </template>
+          </q-input>
+
+          <!-- Botões de Ação -->
+          <div class="row justify-end q-mt-md">
+            <q-btn
+              type="submit"
+              unelevated
+              color="accent"
+              :label="authTab === 'login' ? 'Entrar Agora' : 'Cadastrar Conta'"
+              :icon="authTab === 'login' ? 'login' : 'assignment_ind'"
+              class="font-outfit text-weight-bold rounded-borders q-px-lg pulse-glow"
+              :loading="authStore.loading"
+            />
+          </div>
+        </q-form>
+      </div>
+    </div>
+
     <!-- Seção 1: Aparência e Preferências -->
     <div class="glass-card q-pa-lg animate-slide-up" style="animation-delay: 0.1s;">
       <h2 class="text-h6 text-weight-bold font-outfit q-my-none q-mb-md text-white flex items-center">
@@ -202,14 +365,80 @@ import { ref } from 'vue'
 import { useStudyStore } from '../stores/study'
 import { useSettingsStore } from '../stores/settings'
 import { useAchievementsStore } from '../stores/achievements'
+import { useAuthStore } from '../stores/auth'
 import exportService from '../services/export'
 import { Notify, Dialog } from 'quasar'
 
 const studyStore = useStudyStore()
 const settingsStore = useSettingsStore()
 const achievementsStore = useAchievementsStore()
+const authStore = useAuthStore()
 
 const backupFile = ref(null)
+
+// Estados de Autenticação local
+const authTab = ref('login')
+const email = ref('')
+const password = ref('')
+const fullName = ref('')
+
+async function handleLogin() {
+  if (!email.value || !password.value) {
+    Notify.create({ message: 'Preencha todos os campos obrigatórios!', color: 'warning', position: 'top' })
+    return
+  }
+  try {
+    await authStore.login(email.value, password.value)
+    email.value = ''
+    password.value = ''
+  } catch (err) {
+    // Erros já notificados no store
+  }
+}
+
+async function handleRegister() {
+  if (!email.value || !password.value || !fullName.value) {
+    Notify.create({ message: 'Por favor, preencha todos os campos para se cadastrar.', color: 'warning', position: 'top' })
+    return
+  }
+  try {
+    await authStore.register(email.value, password.value, fullName.value)
+    email.value = ''
+    password.value = ''
+    fullName.value = ''
+    authTab.value = 'login'
+  } catch (err) {
+    // Erros já notificados no store
+  }
+}
+
+async function handleLogout() {
+  Dialog.create({
+    title: 'Desconectar Conta',
+    message: 'Tem certeza de que deseja desconectar? Seu progresso continuará salvo no banco local deste navegador.',
+    ok: { label: 'Sim, Sair', color: 'negative', flat: false, unelevated: true },
+    cancel: { label: 'Cancelar', color: 'grey-4', flat: true },
+    dark: true
+  }).onOk(() => {
+    authStore.logout()
+  })
+}
+
+async function forceSyncUp() {
+  await authStore.syncToCloud()
+}
+
+async function forceSyncDown() {
+  Dialog.create({
+    title: 'Baixar dados da Nuvem',
+    message: 'ATENÇÃO: Isso irá substituir todas as suas lições concluídas e anotações deste navegador com os dados salvos na sua conta da nuvem. Deseja prosseguir?',
+    ok: { label: 'Sim, Baixar', color: 'info', unelevated: true },
+    cancel: { label: 'Cancelar', color: 'grey-4', flat: true },
+    dark: true
+  }).onOk(async () => {
+    await authStore.syncFromCloud()
+  })
+}
 
 // Exporta o relatório completo em PDF
 function downloadPDF() {
@@ -219,7 +448,8 @@ function downloadPDF() {
     streak: studyStore.streak,
     totalMinutes: studyStore.totalMinutes,
     notes: studyStore.notes,
-    completedLessons: studyStore.completedLessons
+    completedLessons: studyStore.completedLessons,
+    userName: authStore.displayName
   }
 
   const success = exportService.exportToPDF(stats)
@@ -392,5 +622,19 @@ function confirmResetData() {
 .border-danger {
   border: 1px solid rgba(229, 57, 53, 0.25);
   background: rgba(229, 57, 53, 0.02) !important;
+}
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.glass-card-flat {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+.text-xs {
+  font-size: 11px;
 }
 </style>

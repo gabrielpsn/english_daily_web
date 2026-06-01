@@ -80,7 +80,7 @@ export const useStudyStore = defineStore('study', {
     },
 
     /**
-     * Salva o estado atual no localStorage
+     * Salva o estado atual no localStorage e sincroniza na nuvem se autenticado
      */
     saveStudyData() {
       const saved = storageService.load() || {}
@@ -90,6 +90,23 @@ export const useStudyStore = defineStore('study', {
       saved.streak = this.streak
       saved.totalMinutes = this.totalMinutes
       storageService.save(saved)
+
+      // Sincroniza assincronamente com o Supabase se logado (evita importação circular)
+      import('./auth').then(({ useAuthStore }) => {
+        const authStore = useAuthStore()
+        if (authStore.isAuthenticated) {
+          import('../services/supabase').then(({ supabaseService }) => {
+            supabaseService.saveProgress(authStore.userId, {
+              completedLessons: this.completedLessons,
+              studyDates: this.studyDates,
+              streak: this.streak,
+              totalMinutes: this.totalMinutes
+            }).catch(err => {
+              console.error('Erro ao sincronizar progresso na nuvem:', err)
+            })
+          })
+        }
+      })
     },
 
     /**
@@ -118,7 +135,7 @@ export const useStudyStore = defineStore('study', {
     },
 
     /**
-     * Salva uma anotação vinculada a uma lição
+     * Salva uma anotação vinculada a uma lição e sincroniza na nuvem se autenticado
      * @param {number} day - Dia da lição
      * @param {string} text - Conteúdo da nota
      */
@@ -126,6 +143,18 @@ export const useStudyStore = defineStore('study', {
       this.notes[day.toString()] = text
       this.registerStudyDate()
       this.saveStudyData()
+
+      // Sincroniza anotação específica com o Supabase se logado
+      import('./auth').then(({ useAuthStore }) => {
+        const authStore = useAuthStore()
+        if (authStore.isAuthenticated) {
+          import('../services/supabase').then(({ supabaseService }) => {
+            supabaseService.saveNote(authStore.userId, day, text).catch(err => {
+              console.error(`Erro ao sincronizar anotação do dia ${day} no Supabase:`, err)
+            })
+          })
+        }
+      })
     },
 
     /**

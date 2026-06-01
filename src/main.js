@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { Quasar, Notify, Dark } from 'quasar'
+import { Quasar, Notify, Dark, Dialog } from 'quasar'
 
 // Import icon libraries
 import '@quasar/extras/material-icons/material-icons.css'
@@ -22,7 +22,8 @@ app.use(router)
 app.use(Quasar, {
   plugins: {
     Notify,
-    Dark
+    Dark,
+    Dialog
   },
   config: {
     dark: true // Habilita o modo escuro por padrão

@@ -81,7 +81,7 @@
     <div class="glass-card q-pa-lg animate-slide-up" style="animation-delay: 0.2s;">
       <h2 class="text-h6 text-weight-bold font-outfit q-my-none q-mb-sm text-gradient-purple flex items-center">
         <q-icon name="lightbulb" color="warning" size="24px" class="q-mr-sm" />
-        Insights de Estudo para Gabriel
+        Insights de Estudo para {{ authStore.displayName }}
       </h2>
       <ul class="q-pl-md q-my-none text-body2 text-grey-3 q-gutter-y-sm">
         <li>
@@ -101,9 +101,11 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useStudyStore } from '../stores/study'
+import { useAuthStore } from '../stores/auth'
 import { Chart } from 'chart.js/auto'
 
 const studyStore = useStudyStore()
+const authStore = useAuthStore()
 
 const phasesChartCanvas = ref(null)
 const monthlyChartCanvas = ref(null)

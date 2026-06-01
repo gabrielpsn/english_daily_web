@@ -91,7 +91,7 @@ export const exportService = {
    * @param {Object} stats - Estatísticas contendo progresso, streak, tempo e notas
    */
   exportToPDF(stats) {
-    const { progress, completedCount, streak, totalMinutes, notes, completedLessons } = stats
+    const { progress, completedCount, streak, totalMinutes, notes, completedLessons, userName = 'Gabriel' } = stats
 
     try {
       const doc = new jsPDF()
@@ -213,7 +213,7 @@ export const exportService = {
         doc.setFontSize(8)
         doc.setTextColor(...grayColor)
         doc.text(`Pagina ${i} de ${pageCount}`, 100, 290, { align: 'center' })
-        doc.text('English Study Pro - Desenvolvido para Gabriel', 15, 290)
+        doc.text(`English Study Pro - Aluno: ${userName}`, 15, 290)
       }
 
       doc.save(`english-study-pro-relatorio-${new Date().toLocaleDateString('sv')}.pdf`)

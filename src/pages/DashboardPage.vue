@@ -9,7 +9,7 @@
       <div class="row items-center justify-between q-col-gutter-md">
         <div class="col-12 col-md-8">
           <div class="text-subtitle1 text-purple-2 text-weight-medium font-outfit uppercase tracking-wider">English Study Pro</div>
-          <h1 class="text-h4 text-weight-bold font-outfit q-my-sm text-gradient">Olá, Gabriel!</h1>
+          <h1 class="text-h4 text-weight-bold font-outfit q-my-sm text-gradient">Olá, {{ authStore.displayName }}!</h1>
           <p class="text-body1 text-grey-2 q-mb-md">
             {{ heroSubtitle }}
           </p>
@@ -233,9 +233,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useStudyStore } from '../stores/study'
+import { useAuthStore } from '../stores/auth'
 import lessonsData from '../data/lessonsData'
 
 const studyStore = useStudyStore()
+const authStore = useAuthStore()
 
 const isFlipped = ref(false)
 const flashcardWord = ref(null)
