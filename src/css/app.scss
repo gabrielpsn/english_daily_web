@@ -1,0 +1,189 @@
+// Global SCSS and Custom Premium Design System
+
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #0d0b18; // Fundo ultra escuro arroxeado
+  color: #e2e1e9;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .text-brand {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+// Glassmorphism System
+.glass-card {
+  background: rgba(30, 25, 50, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  color: #fff;
+  
+  &:hover {
+    border-color: rgba(149, 117, 205, 0.25);
+    box-shadow: 0 12px 40px 0 rgba(94, 53, 177, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+.glass-card-flat {
+  background: rgba(30, 25, 50, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+}
+
+// Glowing Gradients
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #4A148C 0%, #5E35B1 50%, #7E57C2 100%);
+  box-shadow: 0 4px 20px 0 rgba(94, 53, 177, 0.4);
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(135deg, #150f24 0%, #0d091a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.bg-gradient-accent {
+  background: linear-gradient(135deg, #7B1FA2 0%, #9C27B0 100%);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(135deg, #1B5E20 0%, #43A047 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #b39ddb 0%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-purple {
+  background: linear-gradient(135deg, #e040fb 0%, #9575cd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+// Micro animations
+@keyframes pulse-glowing {
+  0% {
+    box-shadow: 0 0 5px rgba(94, 53, 177, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(94, 53, 177, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(94, 53, 177, 0.4);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glowing 2s infinite ease-in-out;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+// Customized Scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d0b18;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2e264d;
+  border-radius: 4px;
+  
+  &:hover {
+    background: #4a3e7a;
+  }
+}
+
+// Custom Quasar Overrides
+.q-layout {
+  background-color: #0d0b18 !important;
+}
+
+.q-drawer {
+  background-color: rgba(21, 15, 36, 0.95) !important;
+  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.q-header {
+  background-color: rgba(13, 11, 24, 0.8) !important;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.q-footer {
+  background-color: rgba(13, 11, 24, 0.9) !important;
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+// Active link styling in layout
+.active-nav-item {
+  color: #fff !important;
+  background: rgba(94, 53, 177, 0.15) !important;
+  border-left: 4px solid #7E57C2;
+}
+
+// custom inputs
+.custom-input {
+  .q-field__control {
+    background: rgba(30, 25, 50, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px !important;
+    
+    &:before, &:after {
+      display: none !important;
+    }
+  }
+}
+
+// Pulse indicator for audio waves
+.sound-bar {
+  display: inline-block;
+  width: 3px;
+  height: 20px;
+  background-color: #9575CD;
+  margin: 0 2px;
+  border-radius: 3px;
+  animation: bounce-bar 1s infinite alternate;
+  
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.4s; }
+  &:nth-child(4) { animation-delay: 0.1s; }
+  &:nth-child(5) { animation-delay: 0.3s; }
+}
+
+@keyframes bounce-bar {
+  10% { height: 4px; }
+  100% { height: 28px; }
+}
