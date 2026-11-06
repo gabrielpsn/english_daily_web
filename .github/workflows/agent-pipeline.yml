@@ -1,0 +1,71 @@
+name: Autonomous Agent CI/CD Pipeline
+
+on:
+  repository_dispatch:
+    types: [jira_issue_assigned, jira_issue_in_progress]
+  workflow_dispatch:
+    inputs:
+      task_id:
+        description: 'Jira Task Key (e.g. ENG-101)'
+        required: true
+      task_title:
+        description: 'Task Title'
+        required: true
+      task_description:
+        description: 'Task Scope and Acceptance Criteria'
+        required: false
+        default: ''
+
+jobs:
+  agent_orchestration:
+    name: Run Autonomous Engineering Loop
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Base Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Execute Autonomous Agent Loop
+        id: run_agent
+        env:
+          TASK_ID: ${{ github.event.client_payload.issue_key || github.event.inputs.task_id }}
+          TASK_TITLE: ${{ github.event.client_payload.summary || github.event.inputs.task_title }}
+          TASK_DESC: ${{ github.event.client_payload.description || github.event.inputs.task_description }}
+        run: |
+          ./.agent/scripts/run-task.sh "$TASK_ID" "$TASK_TITLE" "$TASK_DESC"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: "feature/${{ github.event.client_payload.issue_key || github.event.inputs.task_id }}"
+          title: "feat(${{ github.event.client_payload.issue_key || github.event.inputs.task_id }}): ${{ github.event.client_payload.summary || github.event.inputs.task_title }}"
+          body: |
+            ## 🤖 Pull Request Gerado Automaticamente por Agente de IA
+
+            **Jira Task:** [${{ github.event.client_payload.issue_key || github.event.inputs.task_id }}](https://jira.atlassian.com/browse/${{ github.event.client_payload.issue_key || github.event.inputs.task_id }})
+            **Título:** ${{ github.event.client_payload.summary || github.event.inputs.task_title }}
+
+            ---
+
+            ### 📋 Resumo das Ações
+            - **Planejamento:** Elaborado pela `skill-planner` com respeito à arquitetura *Offline-First*.
+            - **Implementação:** Código gerado pela `skill-executor` aderente a `conventions.md`.
+            - **Validação:** Aprovado pela `skill-quality` (`npm run build` com código de saída 0).
+            - **Auditoria:** Revisado pela `skill-reviewer` com status `APPROVED`.
+
+            ---
+            *Sinalizado para Code Review Humano.*
+          labels: |
+            automated-pr
+            needs-human-review
