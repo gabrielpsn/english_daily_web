@@ -1,5 +1,3 @@
-import { jsPDF } from 'jspdf'
-
 export const exportService = {
   /**
    * Exporta todo o estado do progresso para um arquivo JSON local (Backup)
@@ -87,13 +85,15 @@ export const exportService = {
   },
 
   /**
-   * Exporta um relatório elegante e estilizado em PDF do progresso do aluno
+   * Exporta um relatório elegante e estilizado em PDF do progresso do aluno (Carregamento sob demanda)
    * @param {Object} stats - Estatísticas contendo progresso, streak, tempo e notas
+   * @returns {Promise<boolean>} Sucesso da exportação
    */
-  exportToPDF(stats) {
+  async exportToPDF(stats) {
     const { progress, completedCount, streak, totalMinutes, notes, completedLessons, userName = 'Gabriel' } = stats
 
     try {
+      const { jsPDF } = await import('jspdf')
       const doc = new jsPDF()
       
       // Cores do Design Eclipse Night

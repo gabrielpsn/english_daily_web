@@ -441,7 +441,7 @@ async function forceSyncDown() {
 }
 
 // Exporta o relatório completo em PDF
-function downloadPDF() {
+async function downloadPDF() {
   const stats = {
     progress: studyStore.progress,
     completedCount: studyStore.completedCount,
@@ -452,7 +452,7 @@ function downloadPDF() {
     userName: authStore.displayName
   }
 
-  const success = exportService.exportToPDF(stats)
+  const success = await exportService.exportToPDF(stats)
   if (success) {
     Notify.create({
       message: 'Relatório PDF gerado com sucesso!',

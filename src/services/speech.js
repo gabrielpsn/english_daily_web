@@ -5,6 +5,24 @@ const hasSpeechSynthesis = typeof window !== 'undefined' && 'speechSynthesis' in
 const SpeechRecognition = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition)
 
 let recognitionInstance = null
+let cachedVoices = []
+
+// Carregamento resiliente e reativo das vozes do navegador
+function populateVoices() {
+  if (hasSpeechSynthesis) {
+    const list = window.speechSynthesis.getVoices()
+    if (list && list.length > 0) {
+      cachedVoices = list
+    }
+  }
+}
+
+if (hasSpeechSynthesis) {
+  populateVoices()
+  if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+    window.speechSynthesis.onvoiceschanged = populateVoices
+  }
+}
 
 export const speechService = {
   // --- SÍNTESE DE VOZ (TEXT-TO-SPEECH) ---
@@ -25,7 +43,9 @@ export const speechService = {
   getAvailableVoices(accentCode = 'US') {
     if (!hasSpeechSynthesis) return []
 
-    const voices = window.speechSynthesis.getVoices()
+    // Atualiza cache de vozes caso estejam disponíveis agora
+    populateVoices()
+    const voices = cachedVoices.length > 0 ? cachedVoices : window.speechSynthesis.getVoices()
     
     // Mapeamento de sotaques para tags de idiomas
     const accentLangMap = {

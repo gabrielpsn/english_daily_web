@@ -102,43 +102,8 @@
       </div>
     </div>
 
-    <!-- Habit Grid Estilo GitHub para Devs -->
-    <div class="glass-card q-pa-lg">
-      <div class="flex items-center justify-between q-mb-md">
-        <div>
-          <h2 class="text-h6 text-weight-bold font-outfit q-my-none text-gradient-purple flex items-center">
-            <q-icon name="code" size="24px" class="q-mr-sm" />
-            Frequência de Estudos (Git-Style Commits)
-          </h2>
-          <p class="text-caption text-grey-5 q-my-none">Mapeamento de consistência de estudos nos últimos 120 dias</p>
-        </div>
-        <div class="flex items-center q-gutter-x-xs text-caption text-grey-5 gt-xs">
-          <span>Menos</span>
-          <div class="grid-box bg-box-0"></div>
-          <div class="grid-box bg-box-1"></div>
-          <div class="grid-box bg-box-2"></div>
-          <span>Mais</span>
-        </div>
-      </div>
-
-      <!-- Grid real -->
-      <div class="row no-wrap justify-between overflow-auto q-py-sm">
-        <div class="flex q-gutter-xs" style="min-width: 620px;">
-          <!-- 17 colunas (semanas) de 7 linhas (dias) -->
-          <div v-for="weekIndex in 17" :key="weekIndex" class="flex flex-column q-gutter-y-xs">
-            <div
-              v-for="dayIndex in 7"
-              :key="dayIndex"
-              :class="['grid-box', getGridBoxClass(weekIndex, dayIndex)]"
-            >
-              <q-tooltip class="bg-grey-9 text-white text-caption">
-                {{ getGridBoxTooltip(weekIndex, dayIndex) }}
-              </q-tooltip>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Habit Grid Estilo GitHub para Devs (Componente Modular) -->
+    <ConsistencyHeatmap :study-dates="studyStore.studyDates" />
 
     <!-- Seção Inferior: Próxima Aula & Flashcards -->
     <div class="row q-col-gutter-lg">
@@ -182,65 +147,27 @@
         </div>
       </div>
 
-      <!-- Flashcards de Revisão -->
+      <!-- Flashcards de Revisão Ativa (Componente Modular) -->
       <div class="col-12 col-md-6">
-        <div class="glass-card q-pa-lg h-100 flex flex-column justify-between">
-          <div>
-            <div class="text-subtitle2 text-purple-2 text-weight-bold uppercase font-outfit q-mb-xs">Revisão Rápida (Active Recall)</div>
-            <h3 class="text-h6 text-weight-bold font-outfit q-my-none text-white">Card do Conhecimento</h3>
-            <p class="text-caption text-grey-5 q-mb-md">Pratique vocabulários de lições que você já concluiu para consolidar a memória.</p>
-            
-            <div v-if="flashcardWord" class="review-box relative-position overflow-hidden flex flex-center text-center q-pa-lg cursor-pointer glass-card-flat" @click="isFlipped = !isFlipped">
-              <!-- Verso ou Frente -->
-              <div v-if="!isFlipped" class="animate-fade-in">
-                <div class="text-caption text-accent text-weight-bold">PALAVRA / EXPRESSÃO</div>
-                <div class="text-h4 text-weight-bold q-my-sm font-outfit text-gradient text-capitalize">{{ flashcardWord.word }}</div>
-                <div class="text-caption text-grey-4 flex items-center justify-center">
-                  <q-icon name="touch_app" size="14px" class="q-mr-xs text-grey-5" />
-                  <span>Clique para ver a tradução</span>
-                </div>
-              </div>
-              <div v-else class="animate-fade-in">
-                <div class="text-caption text-warning text-weight-bold">SIGNIFICADO</div>
-                <div class="text-h5 text-weight-bold q-my-xs text-white">{{ flashcardWord.translation }}</div>
-                <div class="text-caption text-grey-4 italic q-mt-sm">"{{ flashcardWord.example }}"</div>
-              </div>
-            </div>
-            
-            <div v-else class="text-center q-py-lg glass-card-flat text-grey-5">
-              <q-icon name="lock" size="32px" class="q-mb-xs text-grey-6" />
-              <div>Conclua pelo menos uma aula para habilitar os Flashcards!</div>
-            </div>
-          </div>
-
-          <div class="flex justify-end q-mt-md">
-            <q-btn
-              v-if="flashcardWord"
-              flat
-              color="accent"
-              icon="refresh"
-              label="Outra Palavra"
-              class="font-outfit text-weight-bold"
-              @click="loadRandomFlashcard"
-            />
-          </div>
-        </div>
+        <FlashcardDeck
+          :completed-lessons="studyStore.completedLessons"
+          :lessons-data="lessonsData"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useStudyStore } from '../stores/study'
 import { useAuthStore } from '../stores/auth'
 import lessonsData from '../data/lessonsData'
+import ConsistencyHeatmap from '../components/ConsistencyHeatmap.vue'
+import FlashcardDeck from '../components/FlashcardDeck.vue'
 
 const studyStore = useStudyStore()
 const authStore = useAuthStore()
-
-const isFlipped = ref(false)
-const flashcardWord = ref(null)
 
 // Título do cabeçalho dinâmico
 const heroSubtitle = computed(() => {
@@ -270,96 +197,10 @@ const streakText = computed(() => {
 // Data do último estudo
 const lastStudyText = computed(() => {
   if (studyStore.studyDates.length === 0) return 'Nenhuma'
-  // Formata a última data do array ordenado
   const sorted = [...studyStore.studyDates].sort()
   const last = sorted[sorted.length - 1]
-  // Inverte YYYY-MM-DD para DD/MM/YYYY
   const [y, m, d] = last.split('-')
   return `${d}/${m}/${y}`
-})
-
-// --- HABIT GRID (ESTILO GITHUB) ---
-
-// Gera a data correspondente a uma coordenada do grid
-function getDateFromGridCoords(weekIndex, dayIndex) {
-  // O grid mostra 17 semanas. A última caixa é hoje.
-  const today = new Date()
-  today.setHours(0,0,0,0)
-  
-  // Total de dias no grid: 17 * 7 = 119 dias atrás
-  const totalDaysInGrid = 17 * 7
-  const dayOffsetFromEnd = (17 - weekIndex) * 7 + (7 - dayIndex)
-  
-  const targetDate = new Date(today)
-  targetDate.setDate(today.getDate() - dayOffsetFromEnd)
-  return targetDate
-}
-
-// Retorna a classe CSS correspondente para colorir a caixa do grid
-function getGridBoxClass(weekIndex, dayIndex) {
-  const targetDate = getDateFromGridCoords(weekIndex, dayIndex)
-  const dateStr = targetDate.toLocaleDateString('sv') // 'YYYY-MM-DD'
-  
-  // Valida se a data do grid é futura
-  const today = new Date()
-  today.setHours(0,0,0,0)
-  if (targetDate > today) return 'grid-future'
-
-  // Verifica se o usuário estudou
-  const studied = studyStore.studyDates.includes(dateStr)
-  return studied ? 'bg-box-2' : 'bg-box-0'
-}
-
-// Retorna a mensagem de tooltip para a caixa do grid
-function getGridBoxTooltip(weekIndex, dayIndex) {
-  const targetDate = getDateFromGridCoords(weekIndex, dayIndex)
-  const dateStr = targetDate.toLocaleDateString('sv')
-  
-  // Formata data brasileira
-  const dateBr = targetDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' })
-  
-  const today = new Date()
-  today.setHours(0,0,0,0)
-  if (targetDate > today) return `${dateBr} (Futuro)`
-
-  const studied = studyStore.studyDates.includes(dateStr)
-  return studied 
-    ? `${dateBr}: Dia Estudado! 🔥` 
-    : `${dateBr}: Sem estudos registrados.`
-}
-
-// --- FLASHCARDS ---
-
-// Carrega uma palavra aleatória das aulas já concluídas
-function loadRandomFlashcard() {
-  isFlipped.value = false
-  
-  // Se não concluiu aulas, não faz nada
-  if (studyStore.completedLessons.length === 0) {
-    flashcardWord.value = null
-    return
-  }
-
-  // Agrupa todos os vocabulários das aulas concluídas
-  const pool = []
-  studyStore.completedLessons.forEach(dayId => {
-    const lesson = lessonsData.find(l => l.day === dayId)
-    if (lesson && lesson.vocabulary) {
-      pool.push(...lesson.vocabulary)
-    }
-  })
-
-  if (pool.length > 0) {
-    const randIndex = Math.floor(Math.random() * pool.length)
-    flashcardWord.value = pool[randIndex]
-  } else {
-    // Fallback: se as aulas concluídas não tiverem vocabulário
-    flashcardWord.value = null
-  }
-}
-
-onMounted(() => {
-  loadRandomFlashcard()
 })
 </script>
 
@@ -375,70 +216,5 @@ onMounted(() => {
 }
 .uppercase {
   text-transform: uppercase;
-}
-
-// Flashcard Style
-.review-box {
-  min-height: 130px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    border-color: rgba(149, 117, 205, 0.4);
-    background: rgba(149, 117, 205, 0.05);
-  }
-}
-
-// Git Habit Tracker Grid
-.grid-box {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    transform: scale(1.2);
-    box-shadow: 0 0 8px rgba(149, 117, 205, 0.8);
-    z-index: 10;
-  }
-}
-
-.bg-box-0 {
-  background-color: #17142b;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-.bg-box-1 {
-  background-color: rgba(94, 53, 177, 0.4);
-}
-
-.bg-box-2 {
-  background-color: #7E57C2;
-  box-shadow: 0 0 4px rgba(126, 87, 194, 0.4);
-}
-
-.grid-future {
-  background-color: #0b0914;
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.animate-pulse {
-  animation: pulse-badge 1.5s infinite;
-}
-
-@keyframes pulse-badge {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
 }
 </style>

@@ -195,15 +195,41 @@ function initCharts() {
 
   // --- GRÁFICO 2: FREQUÊNCIA MENSAL (LINE CHART) ---
   if (monthlyChartCanvas.value) {
-    // Agrupa minutos por mês de forma mockada para dar visualização bonita de histórico
-    const studyHoursData = [0.5, 1.2, 2.5, 4.0, (studyStore.totalMinutes / 60).toFixed(1)]
+    // Gera dinamicamente os últimos 5 meses a partir da data real atual
+    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    const now = new Date()
+    const dynamicLabels = []
+    const dynamicHoursData = []
+
+    // Agrupa os dias estudados reais por ano-mês ('YYYY-MM')
+    const studyByMonth = {}
+    studyStore.studyDates.forEach(dateStr => {
+      const ym = dateStr.slice(0, 7)
+      studyByMonth[ym] = (studyByMonth[ym] || 0) + 1
+    })
+
+    for (let i = 4; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      const year = d.getFullYear()
+      const monthIndex = d.getMonth()
+      const ym = `${year}-${String(monthIndex + 1).padStart(2, '0')}`
+
+      const label = i === 0 ? `${monthNames[monthIndex]} (Atual)` : monthNames[monthIndex]
+      dynamicLabels.push(label)
+
+      // Calcula horas reais estudadas naquele mês
+      const daysInMonth = studyByMonth[ym] || 0
+      const hours = (daysInMonth * 15) / 60
+      dynamicHoursData.push(Number(hours.toFixed(1)))
+    }
+
     monthlyChartInstance = new Chart(monthlyChartCanvas.value, {
       type: 'line',
       data: {
-        labels: ['Fevereiro', 'Março', 'Abril', 'Maio', 'Junho (Atual)'],
+        labels: dynamicLabels,
         datasets: [{
           label: 'Horas Estudadas',
-          data: studyHoursData,
+          data: dynamicHoursData,
           fill: true,
           backgroundColor: 'rgba(33, 150, 243, 0.15)',
           borderColor: '#2196F3',

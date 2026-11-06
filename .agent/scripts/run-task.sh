@@ -67,12 +67,12 @@ while [[ $ITERATION -le $MAX_ITERATIONS ]]; do
   # Código é aplicado ou corrigido neste passo
   
   # B. skill-quality
-  echo -e "-> [skill-quality]: Executando build de produção e validação de templates..."
-  if npm run build > /tmp/build_${TASK_ID}.log 2>&1; then
-    echo -e "${C_GREEN}✓ Build passou com sucesso!${C_RESET}"
+  echo -e "-> [skill-quality]: Executando testes unitários e build de produção..."
+  if npm run test > /tmp/test_${TASK_ID}.log 2>&1 && npm run build > /tmp/build_${TASK_ID}.log 2>&1; then
+    echo -e "${C_GREEN}✓ Testes unitários e build passaram com sucesso!${C_RESET}"
     QUALITY_PASSED=true
   else
-    echo -e "${C_RED}✗ Falha de compilação detectada no build.${C_RESET}"
+    echo -e "${C_RED}✗ Falha detectada na validação de qualidade (testes ou build).${C_RESET}"
     tail -n 15 /tmp/build_${TASK_ID}.log
     QUALITY_PASSED=false
     ITERATION=$((ITERATION + 1))
