@@ -45,11 +45,57 @@
       </q-tabs>
 
       <q-tab-panels v-model="activeTab" animated class="bg-transparent text-white">
-        <!-- Aba 1: Vocabulário -->
+        <!-- Aba 1: Vocabulário & Diálogo Situacional -->
         <q-tab-panel name="vocabulary" class="q-pa-lg">
+          <!-- Cenário Prático & Diálogo Real da Lição -->
+          <div v-if="lesson.dialogue && lesson.dialogue.length > 0" class="glass-card-flat q-pa-md q-mb-lg border-all">
+            <div class="row items-center justify-between q-mb-sm">
+              <div class="flex items-center text-subtitle2 text-weight-bold font-outfit text-accent">
+                <q-icon name="forum" size="20px" class="q-mr-xs" />
+                Cenário Real & Diálogo Dev
+              </div>
+              <span v-if="lesson.category" class="vocab-badge font-outfit uppercase">
+                {{ lesson.category }}
+              </span>
+            </div>
+            
+            <p v-if="lesson.context" class="text-caption text-grey-4 italic q-mb-md">
+              "{{ lesson.context }}"
+            </p>
+
+            <!-- Diálogo Estilizado -->
+            <div class="q-gutter-y-sm">
+              <div
+                v-for="(line, lineIdx) in lesson.dialogue"
+                :key="lineIdx"
+                class="flex items-start q-gutter-x-sm dialogue-bubble q-pa-sm rounded-borders"
+                style="background: rgba(255, 255, 255, 0.03);"
+              >
+                <q-avatar size="28px" :color="line.speaker === 'Gabriel' ? 'primary' : 'deep-purple-9'" text-color="white" class="text-weight-bold text-caption font-outfit">
+                  {{ line.speaker.charAt(0) }}
+                </q-avatar>
+                <div class="col">
+                  <div class="text-caption text-weight-bold text-accent">{{ line.speaker }}</div>
+                  <div class="text-body2 text-white">{{ line.text }}</div>
+                </div>
+                <q-btn
+                  round
+                  flat
+                  dense
+                  size="xs"
+                  color="grey-4"
+                  icon="volume_up"
+                  @click="playSpeech(line.text)"
+                >
+                  <q-tooltip class="bg-grey-9 text-caption">Ouvir fala</q-tooltip>
+                </q-btn>
+              </div>
+            </div>
+          </div>
+
           <div class="flex items-center justify-between q-mb-md">
             <div>
-              <h2 class="text-h6 text-weight-bold font-outfit q-my-none text-gradient">Vocabulário do Dia</h2>
+              <h2 class="text-h6 text-weight-bold font-outfit q-my-none text-gradient">Vocabulário-Chave do Dia</h2>
               <p class="text-caption text-grey-5 q-my-none">Clique nos cards para revelar a tradução e treine a escuta.</p>
             </div>
             <!-- Seletor sotaque rápido -->
@@ -114,9 +160,20 @@
 
         <!-- Aba 2: Prática de Pronúncia Interativa (Componente Modular) -->
         <q-tab-panel name="practice" class="q-pa-lg">
-          <div class="q-mb-lg">
+          <div class="q-mb-md">
             <h2 class="text-h6 text-weight-bold font-outfit q-my-none text-gradient">Treino de Fala Interativo</h2>
             <p class="text-caption text-grey-5 q-my-none">Ouça a frase modelo, clique no microfone e fale. O sistema analisará sua pronúncia palavra por palavra usando IA local.</p>
+          </div>
+
+          <!-- Dica Fonética Pro para Brasileiros -->
+          <div v-if="lesson.pronunciationTip" class="glass-card-flat q-pa-md q-mb-lg border-all" style="border-left: 4px solid #FFB74D;">
+            <div class="flex items-center text-warning text-weight-bold font-outfit q-mb-xs">
+              <q-icon name="tips_and_updates" size="20px" class="q-mr-xs" />
+              Dica Fonética Pro: {{ lesson.pronunciationTip.rule }}
+            </div>
+            <div class="text-body2 text-grey-3">
+              {{ lesson.pronunciationTip.explanation }}
+            </div>
           </div>
 
           <div class="q-gutter-y-md">
