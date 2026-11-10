@@ -349,8 +349,24 @@ import { ref, computed, onBeforeUnmount, watch } from 'vue'
 import { speechService } from '../services/speech'
 import { audioRecorderService } from '../services/audioRecorder'
 import { useStudyStore } from '../stores/study'
+import { useAuthStore } from '../stores/auth'
 import { Notify } from 'quasar'
 import confetti from 'canvas-confetti'
+
+const authStore = useAuthStore()
+
+function formatUserText(text) {
+  if (!text) return ''
+  const name = authStore.displayName || 'Dev'
+  return text.replace(/\{userName\}|\bGabriel\b/g, name)
+}
+
+function formatSpeaker(speaker) {
+  if (speaker === 'Você' || speaker === '{userName}' || speaker === 'Gabriel') {
+    return authStore.displayName || 'Você'
+  }
+  return speaker
+}
 
 const props = defineProps({
   lesson: {
@@ -404,8 +420,8 @@ const lessonPhrases = computed(() => {
   if (!props.lesson?.phrases) return []
   return props.lesson.phrases.map((p, idx) => ({
     id: `phrase_${idx}`,
-    text: p.english,
-    translation: p.portuguese,
+    text: formatUserText(p.english),
+    translation: formatUserText(p.portuguese),
     speaker: null
   }))
 })
@@ -415,9 +431,9 @@ const lessonDialogues = computed(() => {
   if (!props.lesson?.dialogue) return []
   return props.lesson.dialogue.map((d, idx) => ({
     id: `dialogue_${idx}`,
-    text: d.text,
+    text: formatUserText(d.text),
     translation: `Fala no diálogo da lição`,
-    speaker: d.speaker
+    speaker: formatSpeaker(d.speaker)
   }))
 })
 

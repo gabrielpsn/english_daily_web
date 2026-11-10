@@ -64,7 +64,7 @@
         </div>
 
         <!-- Filtro por Fase -->
-        <div class="col-12 col-md-6 flex items-center justify-end q-gutter-xs">
+        <div class="col-12 col-md-6 flex items-center justify-between no-wrap overflow-auto q-py-xs">
           <q-btn-toggle
             v-model="selectedPhase"
             no-caps
@@ -76,9 +76,9 @@
             text-color="grey-4"
             :options="[
               { label: 'Todos', value: 'all' },
-              { label: 'Fase 1 (1-30)', value: 'Fundamentos' },
-              { label: 'Fase 2 (31-60)', value: 'Conversação' },
-              { label: 'Fase 3 (61-90)', value: 'Fluência Prática' }
+              { label: 'Fase 1', value: 'Fundamentos' },
+              { label: 'Fase 2', value: 'Conversação' },
+              { label: 'Fase 3', value: 'Fluência Prática' }
             ]"
             class="font-outfit text-caption border-all"
           />
@@ -91,7 +91,7 @@
             :color="onlyFavorites ? 'amber-9' : 'dark'"
             :text-color="onlyFavorites ? 'dark' : 'grey-4'"
             icon="star"
-            class="border-all q-ml-xs"
+            class="border-all q-ml-sm"
             @click="onlyFavorites = !onlyFavorites"
           >
             <q-tooltip class="bg-grey-9 text-caption">
@@ -202,7 +202,7 @@
             <!-- Exemplo no Contexto Dev -->
             <div class="glass-card-flat q-pa-sm rounded-borders text-caption text-grey-3 italic border-all q-mt-xs">
               <div class="flex items-start justify-between">
-                <span>"{{ item.example }}"</span>
+                <span>"{{ formatUserText(item.example) }}"</span>
                 <q-btn
                   round
                   flat
@@ -211,7 +211,7 @@
                   color="grey-4"
                   icon="play_arrow"
                   class="q-ml-xs"
-                  @click="speakText(item.example)"
+                  @click="speakText(formatUserText(item.example))"
                 >
                   <q-tooltip class="bg-grey-9 text-caption">Ouvir frase inteira</q-tooltip>
                 </q-btn>
@@ -279,12 +279,20 @@
 import { ref, computed } from 'vue'
 import { useStudyStore } from '../stores/study'
 import { useSettingsStore } from '../stores/settings'
+import { useAuthStore } from '../stores/auth'
 import { lessonsData } from '../data/lessonsData'
 import { speechService } from '../services/speech'
 import { Notify } from 'quasar'
 
 const studyStore = useStudyStore()
 const settingsStore = useSettingsStore()
+const authStore = useAuthStore()
+
+function formatUserText(text) {
+  if (!text) return ''
+  const name = authStore.displayName || 'Dev'
+  return text.replace(/\{userName\}|\bGabriel\b/g, name)
+}
 
 // Filtros
 const searchQuery = ref('')

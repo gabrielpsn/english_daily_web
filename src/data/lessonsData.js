@@ -1,5 +1,5 @@
 // Catálogo Oficial Curado de 90 Dias - English Study Pro (Web)
-// Focado exclusivamente em Engenheiros de Software (Persona: Gabriel)
+// Focado exclusivamente em Engenheiros de Software
 // Fases: Fundamentos (1-30), Conversação (31-60), Fluência Prática (61-90)
 
 export const lessonsData = [
@@ -16,12 +16,12 @@ export const lessonsData = [
         "text": "Welcome aboard! Why don't you introduce yourself to the team?"
       },
       {
-        "speaker": "Gabriel",
-        "text": "Hi everyone! I'm Gabriel, a full-stack developer with 4 years of experience specializing in Vue and Node."
+        "speaker": "Você",
+        "text": "Hi everyone! I'm {userName}, a full-stack developer with 4 years of experience specializing in Vue and Node."
       },
       {
         "speaker": "Team Lead",
-        "text": "Great to have you here, Gabriel! Welcome!"
+        "text": "Great to have you here, {userName}! Welcome!"
       }
     ],
     "vocabulary": [
@@ -43,8 +43,8 @@ export const lessonsData = [
     ],
     "phrases": [
       {
-        "english": "Hello everyone, my name is Gabriel and I am a software developer.",
-        "portuguese": "Olá a todos, meu nome é Gabriel e eu sou um desenvolvedor de software."
+        "english": "Hello everyone, my name is {userName} and I am a software developer.",
+        "portuguese": "Olá a todos, meu nome é {userName} e eu sou um desenvolvedor de software."
       },
       {
         "english": "I have been working with modern JavaScript and Vue for several years.",
@@ -74,7 +74,7 @@ export const lessonsData = [
         "text": "How long have you been writing TypeScript?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "I've been using TypeScript in production for about three years now."
       },
       {
@@ -132,7 +132,7 @@ export const lessonsData = [
         "text": "Are you running macOS or Linux on your workstation?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "I run Linux on my main machine with a dual monitor setup."
       },
       {
@@ -187,10 +187,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Manager",
-        "text": "Gabriel, are you talking? We can't hear you."
+        "text": "{userName}, are you talking? We can't hear you."
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sorry about that! I was on mute. Can you hear me clearly now?"
       },
       {
@@ -245,10 +245,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "David",
-        "text": "What timezone are you in, Gabriel?"
+        "text": "What timezone are you in, {userName}?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "I'm in Brasília Time (BRT), which is currently one hour ahead of Eastern Time."
       },
       {
@@ -303,10 +303,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Emma",
-        "text": "Hey Gabriel! How was your weekend?"
+        "text": "Hey {userName}! How was your weekend?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "It was pretty relaxing! The weather was great, so I spent some time outdoors. How about yours?"
       },
       {
@@ -361,10 +361,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Coach",
-        "text": "Ready for your weekly fluency check, Gabriel?"
+        "text": "Ready for your weekly fluency check, {userName}?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Yes! I'm ready to introduce myself and describe my workflow without hesitating."
       },
       {
@@ -419,10 +419,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Scrum Master",
-        "text": "Gabriel, you're up! What did you get done yesterday?"
+        "text": "{userName}, you're up! What did you get done yesterday?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Yesterday, I finished implementing the user authentication flow and wrote unit tests for the token refresh logic."
       },
       {
@@ -434,7 +434,7 @@ export const lessonsData = [
       {
         "word": "You're up",
         "translation": "É a sua vez (na fila/reunião)",
-        "example": "You're up next, Gabriel, whenever you are ready."
+        "example": "You're up next, {userName}, whenever you are ready."
       },
       {
         "word": "Get done",
@@ -476,7 +476,7 @@ export const lessonsData = [
     "context": "Continuando seu status na daily, você compartilha o plano de entregas para o dia atual.",
     "dialogue": [
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Today, my main priority is to integrate the payment webhook and test edge cases."
       },
       {
@@ -484,7 +484,7 @@ export const lessonsData = [
         "text": "Sounds solid. Do you need any assistance from the backend folks?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Not yet, but I'll ping them on Slack if anything comes up."
       }
     ],
@@ -535,10 +535,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Scrum Master",
-        "text": "Any blockers on your end, Gabriel?"
+        "text": "Any blockers on your end, {userName}?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Yes, unfortunately I am blocked by missing AWS credentials for the staging bucket."
       },
       {
@@ -592,12 +592,12 @@ export const lessonsData = [
     "context": "Você terminou seu relatório de status e precisa passar a palavra para o próximo colega na Daily.",
     "dialogue": [
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "...and that's all from me! I'll pass it over to Maria."
       },
       {
         "speaker": "Maria",
-        "text": "Thanks Gabriel! Yesterday, I worked on the email notification templates..."
+        "text": "Thanks {userName}! Yesterday, I worked on the email notification templates..."
       }
     ],
     "vocabulary": [
@@ -647,10 +647,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Tech Lead",
-        "text": "Gabriel, did the profile page take longer than anticipated?"
+        "text": "{userName}, did the profile page take longer than anticipated?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Yes, it took a bit longer than estimated because I had to clean up some legacy queries."
       },
       {
@@ -705,10 +705,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Scrum Master",
-        "text": "Gabriel, whenever you're ready."
+        "text": "{userName}, whenever you're ready."
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Good morning team! Yesterday I closed issue 104 and wrote end-to-end tests. Today I'm tackling the user settings UI. No blockers on my side. Passing to Leo!"
       }
     ],
@@ -762,7 +762,7 @@ export const lessonsData = [
         "text": "Standup timer starting. Give your update now!"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Yesterday I completed the API contracts. Today I'm wiring up the frontend components. I'm blocked on design approval. Done!"
       }
     ],
@@ -813,10 +813,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding feature branch?"
+        "text": "Hey {userName}, can we sync regarding feature branch?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I branched off main to start working on the new dark mode theme."
       },
       {
@@ -871,10 +871,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding merge conflict?"
+        "text": "Hey {userName}, can we sync regarding merge conflict?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I had to rebase onto main and resolve a few conflicts in the router file."
       },
       {
@@ -929,10 +929,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding conventional commits?"
+        "text": "Hey {userName}, can we sync regarding conventional commits?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Always prefix your commit with feat, fix, or chore for clean history."
       },
       {
@@ -987,10 +987,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding user story?"
+        "text": "Hey {userName}, can we sync regarding user story?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! The acceptance criteria on this Jira ticket are clear and well defined."
       },
       {
@@ -1045,10 +1045,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding sign-off?"
+        "text": "Hey {userName}, can we sync regarding sign-off?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! We need product sign-off before deploying this change to production."
       },
       {
@@ -1103,10 +1103,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding edge case?"
+        "text": "Hey {userName}, can we sync regarding edge case?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Have we tested what happens when the user loses internet connection?"
       },
       {
@@ -1161,10 +1161,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding pull request template?"
+        "text": "Hey {userName}, can we sync regarding pull request template?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Fill in the pull request template with screenshots of your UI changes."
       },
       {
@@ -1219,10 +1219,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding stop sound?"
+        "text": "Hey {userName}, can we sync regarding stop sound?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Do not add an extra vowel at the end of words like bug, code, and web."
       },
       {
@@ -1277,10 +1277,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding voiceless consonant?"
+        "text": "Hey {userName}, can we sync regarding voiceless consonant?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Fixed, worked, and stopped all end with a crisp 't' sound."
       },
       {
@@ -1335,10 +1335,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding acronym?"
+        "text": "Hey {userName}, can we sync regarding acronym?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! API is pronounced ay-pee-eye, and cache sounds exactly like cash."
       },
       {
@@ -1393,10 +1393,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding schema?"
+        "text": "Hey {userName}, can we sync regarding schema?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! SQL is pronounced sequel, and schema starts with a hard 'k' sound."
       },
       {
@@ -1451,10 +1451,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding tongue placement?"
+        "text": "Hey {userName}, can we sync regarding tongue placement?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Place your tongue between your teeth for think, thanks, and throughput."
       },
       {
@@ -1509,10 +1509,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding liaison?"
+        "text": "Hey {userName}, can we sync regarding liaison?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Native speakers connect final consonants to the next vowel sound naturally."
       },
       {
@@ -1567,10 +1567,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding intonation?"
+        "text": "Hey {userName}, can we sync regarding intonation?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Lower your pitch at the end of statements to sound confident and decisive."
       },
       {
@@ -1625,10 +1625,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding rhythm?"
+        "text": "Hey {userName}, can we sync regarding rhythm?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! English is a stress-timed language, so emphasize the key content words."
       },
       {
@@ -1683,10 +1683,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding milestone?"
+        "text": "Hey {userName}, can we sync regarding milestone?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Congratulations on completing 30 consecutive days of focused English practice!"
       },
       {
@@ -1741,10 +1741,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding pull request description?"
+        "text": "Hey {userName}, can we sync regarding pull request description?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I added a detailed summary explaining why we introduced this new dependency."
       },
       {
@@ -1799,10 +1799,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding clean implementation?"
+        "text": "Hey {userName}, can we sync regarding clean implementation?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Great job simplifying this logic! The component is much easier to read now."
       },
       {
@@ -1857,10 +1857,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding non-blocking nit?"
+        "text": "Hey {userName}, can we sync regarding non-blocking nit?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Non-blocking nitpick: what do you think about memoizing this calculation?"
       },
       {
@@ -1915,10 +1915,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding vulnerability?"
+        "text": "Hey {userName}, can we sync regarding vulnerability?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! We should sanitize this user input to prevent cross-site scripting vulnerabilities."
       },
       {
@@ -1973,10 +1973,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding trade-off?"
+        "text": "Hey {userName}, can we sync regarding trade-off?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I appreciate the feedback! I updated the code and pushed three new commits."
       },
       {
@@ -2031,10 +2031,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding lgtm?"
+        "text": "Hey {userName}, can we sync regarding lgtm?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Looks good to me! All unit tests pass and code quality checks are green."
       },
       {
@@ -2089,10 +2089,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding peer review?"
+        "text": "Hey {userName}, can we sync regarding peer review?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Constructive peer reviews improve codebase health and spread knowledge."
       },
       {
@@ -2147,10 +2147,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding huddle?"
+        "text": "Hey {userName}, can we sync regarding huddle?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Could we jump on a quick Slack huddle to debug this race condition together?"
       },
       {
@@ -2205,10 +2205,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding driver and navigator?"
+        "text": "Hey {userName}, can we sync regarding driver and navigator?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Scroll down to line 120 and let's inspect the console log output."
       },
       {
@@ -2263,10 +2263,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding flaky bug?"
+        "text": "Hey {userName}, can we sync regarding flaky bug?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! This bug is flaky and only reproduces when network latency is simulated."
       },
       {
@@ -2321,10 +2321,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding stack trace?"
+        "text": "Hey {userName}, can we sync regarding stack trace?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! The stack trace points to an unhandled promise rejection in the auth service."
       },
       {
@@ -2379,10 +2379,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding root cause?"
+        "text": "Hey {userName}, can we sync regarding root cause?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! My hypothesis is that the token expires before the websocket reconnects."
       },
       {
@@ -2437,10 +2437,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding hotfix?"
+        "text": "Hey {userName}, can we sync regarding hotfix?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! We need to cherry-pick this fix and deploy an emergency hotfix immediately."
       },
       {
@@ -2495,10 +2495,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding post-mortem?"
+        "text": "Hey {userName}, can we sync regarding post-mortem?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Let's document the timeline and identify preventive measures in the post-mortem."
       },
       {
@@ -2553,10 +2553,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding decoupled?"
+        "text": "Hey {userName}, can we sync regarding decoupled?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! We decoupled the UI presentation layer from the state management stores."
       },
       {
@@ -2611,10 +2611,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding idempotent?"
+        "text": "Hey {userName}, can we sync regarding idempotent?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! PUT and DELETE endpoints must remain strictly idempotent in our REST API."
       },
       {
@@ -2669,10 +2669,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding over-fetching?"
+        "text": "Hey {userName}, can we sync regarding over-fetching?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! GraphQL eliminates over-fetching by allowing clients to specify required fields."
       },
       {
@@ -2727,10 +2727,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding refresh token?"
+        "text": "Hey {userName}, can we sync regarding refresh token?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Store access tokens in memory and use httpOnly cookies for refresh tokens."
       },
       {
@@ -2785,10 +2785,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding cache invalidation?"
+        "text": "Hey {userName}, can we sync regarding cache invalidation?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Cache invalidation and naming things are the two hardest problems in computing."
       },
       {
@@ -2843,10 +2843,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding acid compliance?"
+        "text": "Hey {userName}, can we sync regarding acid compliance?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Postgres provides strict ACID compliance which is critical for financial data."
       },
       {
@@ -2901,10 +2901,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding benchmark?"
+        "text": "Hey {userName}, can we sync regarding benchmark?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Based on our load benchmarks, this architecture handles triple the traffic."
       },
       {
@@ -2959,10 +2959,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding story points?"
+        "text": "Hey {userName}, can we sync regarding story points?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I estimate this user story as a 5 because of the third-party API integration."
       },
       {
@@ -3017,10 +3017,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding scope creep?"
+        "text": "Hey {userName}, can we sync regarding scope creep?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Adding push notifications now is scope creep; let's push it to phase two."
       },
       {
@@ -3075,10 +3075,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding refactoring sprint?"
+        "text": "Hey {userName}, can we sync regarding refactoring sprint?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Investing time in refactoring now will double our deployment velocity next month."
       },
       {
@@ -3133,10 +3133,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding one-on-one?"
+        "text": "Hey {userName}, can we sync regarding one-on-one?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! In our one-on-one, I'd like to discuss my goals for cloud architecture certification."
       },
       {
@@ -3191,10 +3191,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding performance review?"
+        "text": "Hey {userName}, can we sync regarding performance review?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Over the past year, I led two critical initiatives that cut infrastructure costs by 30%."
       },
       {
@@ -3249,10 +3249,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding actionable feedback?"
+        "text": "Hey {userName}, can we sync regarding actionable feedback?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Your feedback was very actionable and helped me improve my code documentation."
       },
       {
@@ -3307,10 +3307,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding async first?"
+        "text": "Hey {userName}, can we sync regarding async first?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Write complete context in your message so colleagues can answer asynchronously."
       },
       {
@@ -3365,10 +3365,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding showcase?"
+        "text": "Hey {userName}, can we sync regarding showcase?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Today I am excited to showcase the new offline speech recognition feature."
       },
       {
@@ -3423,10 +3423,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding consistency?"
+        "text": "Hey {userName}, can we sync regarding consistency?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Sixty days of dedicated English practice has transformed your technical vocabulary!"
       },
       {
@@ -3481,10 +3481,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding elevator pitch?"
+        "text": "Hey {userName}, can we sync regarding elevator pitch?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I am a frontend specialist passionate about developer experience and web performance."
       },
       {
@@ -3539,10 +3539,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding context setting?"
+        "text": "Hey {userName}, can we sync regarding context setting?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Our legacy monolith was experiencing five-second latency during peak traffic hours."
       },
       {
@@ -3597,10 +3597,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding initiative?"
+        "text": "Hey {userName}, can we sync regarding initiative?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I took the initiative to migrate the database queries and implement Redis caching."
       },
       {
@@ -3655,10 +3655,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding metrics?"
+        "text": "Hey {userName}, can we sync regarding metrics?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! As a result, we reduced p99 latency by 75% and saved twenty thousand dollars annually."
       },
       {
@@ -3713,10 +3713,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding overcome?"
+        "text": "Hey {userName}, can we sync regarding overcome?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! The biggest hurdle was maintaining backward compatibility while rewriting the core."
       },
       {
@@ -3771,10 +3771,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding company culture?"
+        "text": "Hey {userName}, can we sync regarding company culture?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I admire your open-source contributions and your commitment to remote-first culture."
       },
       {
@@ -3829,10 +3829,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding engineering culture?"
+        "text": "Hey {userName}, can we sync regarding engineering culture?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! What does the typical onboarding process look like for remote international engineers?"
       },
       {
@@ -3887,10 +3887,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding think aloud?"
+        "text": "Hey {userName}, can we sync regarding think aloud?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Before typing any code, let me walk you through my thought process."
       },
       {
@@ -3945,10 +3945,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding corner case?"
+        "text": "Hey {userName}, can we sync regarding corner case?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Can the input array contain duplicate values, or are all numbers unique?"
       },
       {
@@ -4003,10 +4003,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding brute force?"
+        "text": "Hey {userName}, can we sync regarding brute force?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! The brute force approach takes O(n squared), but we can optimize it using a hash map to O(n)."
       },
       {
@@ -4061,10 +4061,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding time complexity?"
+        "text": "Hey {userName}, can we sync regarding time complexity?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! This solution runs in linear time with O(1) auxiliary space complexity."
       },
       {
@@ -4119,10 +4119,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding off-by-one error?"
+        "text": "Hey {userName}, can we sync regarding off-by-one error?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Looks like an off-by-one error in my loop condition; let me adjust the pointer."
       },
       {
@@ -4177,10 +4177,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding test cases?"
+        "text": "Hey {userName}, can we sync regarding test cases?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Let's write a few test cases including empty inputs and boundary values."
       },
       {
@@ -4235,10 +4235,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding trade-off analysis?"
+        "text": "Hey {userName}, can we sync regarding trade-off analysis?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! To wrap up, this solution prioritizes readability while maintaining optimal runtime."
       },
       {
@@ -4293,10 +4293,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding non-functional requirements?"
+        "text": "Hey {userName}, can we sync regarding non-functional requirements?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! We need high availability with ninety-nine point nine percent uptime and low read latency."
       },
       {
@@ -4351,10 +4351,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding throughput?"
+        "text": "Hey {userName}, can we sync regarding throughput?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Assuming ten million daily active users, we need to handle roughly twelve hundred QPS."
       },
       {
@@ -4409,10 +4409,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding load balancer?"
+        "text": "Hey {userName}, can we sync regarding load balancer?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! We place a load balancer in front of our stateless application servers."
       },
       {
@@ -4467,10 +4467,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding read replicas?"
+        "text": "Hey {userName}, can we sync regarding read replicas?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! We can route read queries to read replicas and shard the database by user ID."
       },
       {
@@ -4525,10 +4525,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding message broker?"
+        "text": "Hey {userName}, can we sync regarding message broker?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! An asynchronous message queue decouples the image upload from video transcoding."
       },
       {
@@ -4583,10 +4583,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding circuit breaker?"
+        "text": "Hey {userName}, can we sync regarding circuit breaker?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! A circuit breaker prevents cascading failures when downstream payment APIs degrade."
       },
       {
@@ -4641,10 +4641,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding end-to-end architecture?"
+        "text": "Hey {userName}, can we sync regarding end-to-end architecture?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! This distributed architecture provides horizontal scalability and geographic redundancy."
       },
       {
@@ -4699,10 +4699,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding offer letter?"
+        "text": "Hey {userName}, can we sync regarding offer letter?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I received the official offer letter and would like to review the benefits package."
       },
       {
@@ -4757,10 +4757,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding compensation package?"
+        "text": "Hey {userName}, can we sync regarding compensation package?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Based on my senior frontend background, I am looking for forty-five dollars per hour."
       },
       {
@@ -4815,10 +4815,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding w-8ben?"
+        "text": "Hey {userName}, can we sync regarding w-8ben?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! As an international contractor in Brazil, I will submit the W-8BEN tax form."
       },
       {
@@ -4873,10 +4873,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding onboarding buddy?"
+        "text": "Hey {userName}, can we sync regarding onboarding buddy?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! My onboarding buddy helped me clone the repos and set up my dev credentials."
       },
       {
@@ -4931,10 +4931,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding access permissions?"
+        "text": "Hey {userName}, can we sync regarding access permissions?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Could an admin grant me write permissions to the frontend GitHub repository?"
       },
       {
@@ -4989,10 +4989,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding active listening?"
+        "text": "Hey {userName}, can we sync regarding active listening?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Focusing on key technical keywords makes understanding diverse accents seamless."
       },
       {
@@ -5047,10 +5047,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding bandwidth?"
+        "text": "Hey {userName}, can we sync regarding bandwidth?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! I don't have the bandwidth to take on an extra ticket this sprint."
       },
       {
@@ -5105,10 +5105,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding continuous improvement?"
+        "text": "Hey {userName}, can we sync regarding continuous improvement?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Fluency is a lifelong muscle; ten minutes a day keeps your speech sharp."
       },
       {
@@ -5163,10 +5163,10 @@ export const lessonsData = [
     "dialogue": [
       {
         "speaker": "Colleague",
-        "text": "Hey Gabriel, can we sync regarding achievement?"
+        "text": "Hey {userName}, can we sync regarding achievement?"
       },
       {
-        "speaker": "Gabriel",
+        "speaker": "Você",
         "text": "Sure! Ninety days of discipline completed! I am now ready to speak English with confidence anywhere in the world."
       },
       {

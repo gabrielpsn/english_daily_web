@@ -105,6 +105,45 @@ h1, h2, h3, h4, h5, h6, .text-brand {
   animation: slide-up 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
+// Mobile-First Responsive Utilities
+@media (max-width: 599.98px) {
+  .full-width-mobile {
+    width: 100% !important;
+  }
+  
+  .q-page {
+    padding-bottom: 104px !important; // Espaço seguro para o footer/bottom navigation em telas móveis
+  }
+
+  .glass-card {
+    padding: 16px !important;
+    border-radius: 14px !important;
+    margin-bottom: 16px;
+  }
+
+  .q-col-gutter-md > *, .q-col-gutter-lg > * {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .mobile-col-12 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mobile-btn-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    
+    .q-btn {
+      width: 100% !important;
+    }
+  }
+}
+
 // Customized Scrollbar
 ::-webkit-scrollbar {
   width: 8px;
@@ -154,16 +193,41 @@ h1, h2, h3, h4, h5, h6, .text-brand {
   border-left: 4px solid #7E57C2;
 }
 
-// custom inputs
+// custom inputs & global autofill dark fix
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #1e1733 inset !important;
+  box-shadow: 0 0 0 1000px #1e1733 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  border-radius: inherit !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .custom-input {
   .q-field__control {
-    background: rgba(30, 25, 50, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 8px !important;
+    background: rgba(30, 25, 50, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px !important;
+    overflow: hidden !important;
     
     &:before, &:after {
       display: none !important;
     }
+  }
+
+  .q-field__native, input, textarea {
+    color: #ffffff !important;
+  }
+
+  .q-field__label {
+    color: #b39ddb !important;
   }
 }
 

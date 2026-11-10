@@ -16,9 +16,9 @@
           >
             <q-tooltip class="bg-grey-9 text-caption">Ouvir Pronúncia Nativa</q-tooltip>
           </q-btn>
-          <div class="text-h6 text-weight-bold font-outfit text-white">{{ phrase.english }}</div>
+          <div class="text-h6 text-weight-bold font-outfit text-white">{{ formattedEnglish }}</div>
         </div>
-        <div class="text-subtitle2 text-grey-5 q-mt-xs q-pl-lg">{{ phrase.portuguese }}</div>
+        <div class="text-subtitle2 text-grey-5 q-mt-xs q-pl-lg">{{ formattedPortuguese }}</div>
       </div>
 
       <!-- Controles de Gravação de Voz -->
@@ -89,10 +89,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { speechService } from '../services/speech'
 import { calculateSimilarity, compareWords } from '../utils/similarity'
+import { useAuthStore } from '../stores/auth'
 import { Notify } from 'quasar'
+
+const authStore = useAuthStore()
 
 const props = defineProps({
   phrase: {
@@ -113,6 +116,16 @@ const props = defineProps({
   }
 })
 
+const formattedEnglish = computed(() => {
+  const name = authStore.displayName || 'Dev'
+  return props.phrase?.english ? props.phrase.english.replace(/\{userName\}|\bGabriel\b/g, name) : ''
+})
+
+const formattedPortuguese = computed(() => {
+  const name = authStore.displayName || 'Dev'
+  return props.phrase?.portuguese ? props.phrase.portuguese.replace(/\{userName\}|\bGabriel\b/g, name) : ''
+})
+
 const emit = defineEmits(['evaluated'])
 
 const isRecording = ref(false)
@@ -131,7 +144,7 @@ async function playModelSpeech() {
 
   isPlaying.value = true
   try {
-    await speechService.speak(props.phrase.english, props.accent, props.speed)
+    await speechService.speak(formattedEnglish.value, props.accent, props.speed)
   } catch (err) {
     Notify.create({
       message: 'Não foi possível reproduzir o áudio',
@@ -155,9 +168,9 @@ function toggleListening() {
       props.accent,
       (textResult) => {
         spokenText.value = textResult
-        const score = calculateSimilarity(props.phrase.english, textResult)
+        const score = calculateSimilarity(formattedEnglish.value, textResult)
         similarityScore.value = score
-        wordBreakdown.value = compareWords(props.phrase.english, textResult)
+        wordBreakdown.value = compareWords(formattedEnglish.value, textResult)
 
         emit('evaluated', { score, textResult, wordBreakdown: wordBreakdown.value })
 

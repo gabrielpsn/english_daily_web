@@ -11,19 +11,23 @@
 
     <!-- Seção 0: Meu Perfil de Desenvolvedor -->
     <div class="glass-card q-pa-lg animate-slide-up relative-position overflow-hidden" style="animation-delay: 0.03s;">
-      <div class="row items-center justify-between q-mb-md">
-        <h2 class="text-h6 text-weight-bold font-outfit q-my-none text-white flex items-center">
-          <q-icon name="badge" color="accent" size="22px" class="q-mr-sm" />
-          <span>Meu Perfil de Desenvolvedor</span>
-        </h2>
-        <q-btn
-          outline
-          color="accent"
-          icon="edit"
-          label="Editar Perfil"
-          class="font-outfit text-weight-bold rounded-borders text-caption"
-          @click="openProfileModal"
-        />
+      <div class="row items-center justify-between q-col-gutter-sm q-mb-md">
+        <div class="col-12 col-sm-auto">
+          <h2 class="text-h6 text-weight-bold font-outfit q-my-none text-white flex items-center">
+            <q-icon name="badge" color="accent" size="22px" class="q-mr-sm" />
+            <span>Meu Perfil de Desenvolvedor</span>
+          </h2>
+        </div>
+        <div class="col-12 col-sm-auto">
+          <q-btn
+            outline
+            color="accent"
+            icon="edit"
+            label="Editar Perfil"
+            class="font-outfit text-weight-bold rounded-borders text-caption full-width"
+            @click="openProfileModal"
+          />
+        </div>
       </div>
 
       <div class="row q-col-gutter-md items-center">
@@ -317,25 +321,29 @@
         <div>
           <div class="text-body1 text-weight-medium q-mb-sm">Relatórios e Planilhas</div>
           <div class="text-caption text-grey-5 q-mb-md">Exporte relatórios em PDF com suas anotações ou planilhas de estudo em CSV.</div>
-          <div class="flex q-gutter-md">
+          <div class="row q-col-gutter-sm">
             <!-- PDF -->
-            <q-btn
-              outline
-              color="accent"
-              icon="picture_as_pdf"
-              label="Baixar Relatório PDF"
-              class="font-outfit text-weight-bold rounded-borders"
-              @click="downloadPDF"
-            />
+            <div class="col-12 col-sm-6">
+              <q-btn
+                outline
+                color="accent"
+                icon="picture_as_pdf"
+                label="Baixar Relatório PDF"
+                class="font-outfit text-weight-bold rounded-borders full-width"
+                @click="downloadPDF"
+              />
+            </div>
             <!-- CSV -->
-            <q-btn
-              outline
-              color="info"
-              icon="grid_on"
-              label="Baixar Planilha CSV"
-              class="font-outfit text-weight-bold rounded-borders"
-              @click="downloadCSV"
-            />
+            <div class="col-12 col-sm-6">
+              <q-btn
+                outline
+                color="info"
+                icon="grid_on"
+                label="Baixar Planilha CSV"
+                class="font-outfit text-weight-bold rounded-borders full-width"
+                @click="downloadCSV"
+              />
+            </div>
           </div>
         </div>
 
@@ -399,7 +407,7 @@
             color="negative"
             icon="delete_forever"
             label="Redefinir Progresso"
-            class="font-outfit text-weight-bold pulse-glow rounded-borders"
+            class="font-outfit text-weight-bold pulse-glow rounded-borders full-width"
             @click="confirmResetData"
           />
         </div>

@@ -101,7 +101,14 @@ export const speechService = {
       utterance.pitch = 1.0
 
       utterance.onend = () => resolve()
-      utterance.onerror = (e) => reject(e)
+      utterance.onerror = (e) => {
+        // Interrupções normais (ex: quando o usuário avança de card ou pausa) não são erros fatais
+        if (e.error === 'interrupted' || e.error === 'canceled') {
+          resolve()
+        } else {
+          reject(e)
+        }
+      }
 
       window.speechSynthesis.speak(utterance)
     })
@@ -171,7 +178,12 @@ export const speechService = {
     }
 
     recognitionInstance.onerror = (event) => {
-      console.error('Erro no reconhecimento de voz:', event.error)
+      // 'no-speech' e 'aborted' ocorrem naturalmente quando o usuário não fala ou interrompe a escuta
+      if (event.error === 'no-speech' || event.error === 'aborted') {
+        if (onEnd) onEnd()
+        return
+      }
+      console.warn('Alerta no reconhecimento de voz:', event.error)
       if (onError) onError(event)
     }
 

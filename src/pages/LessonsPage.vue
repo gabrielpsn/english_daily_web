@@ -31,7 +31,7 @@
 
     <!-- Barra de Filtros de Fases -->
     <div class="row q-col-gutter-sm animate-slide-up" style="animation-delay: 0.1s;">
-      <div class="col-12 flex q-gutter-sm">
+      <div class="col-12 flex q-gutter-sm no-wrap overflow-auto q-pb-xs">
         <q-btn
           v-for="phase in phaseOptions"
           :key="phase.value"

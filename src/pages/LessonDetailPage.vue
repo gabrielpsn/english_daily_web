@@ -18,26 +18,32 @@
       </div>
       
       <!-- Botão Concluir Aula & Modo Mãos-Livres no Topo -->
-      <div class="col-12 col-sm-4 flex justify-end q-gutter-x-sm">
-        <q-btn
-          outline
-          color="accent"
-          icon="headphones"
-          label="Mãos-Livres"
-          class="font-outfit text-weight-bold q-py-sm q-px-md rounded-borders"
-          @click="handsFreeOpen = true"
-        >
-          <q-tooltip class="bg-grey-9 text-caption">Modo Áudio Contínuo (Hands-Free Walk & Listen)</q-tooltip>
-        </q-btn>
+      <div class="col-12 col-sm-5 flex justify-end">
+        <div class="row q-col-gutter-xs full-width justify-end">
+          <div class="col-6 col-sm-auto">
+            <q-btn
+              outline
+              color="accent"
+              icon="headphones"
+              label="Mãos-Livres"
+              class="font-outfit text-weight-bold q-py-sm rounded-borders full-width"
+              @click="handsFreeOpen = true"
+            >
+              <q-tooltip class="bg-grey-9 text-caption">Modo Áudio Contínuo (Hands-Free)</q-tooltip>
+            </q-btn>
+          </div>
 
-        <q-btn
-          unelevated
-          :color="isCompleted ? 'positive' : 'accent'"
-          :icon="isCompleted ? 'check_circle' : 'check'"
-          :label="isCompleted ? 'Concluída!' : 'Concluir Aula'"
-          class="font-outfit text-weight-bold pulse-glow q-py-sm q-px-lg rounded-borders"
-          @click="toggleCompletion"
-        />
+          <div class="col-6 col-sm-auto">
+            <q-btn
+              unelevated
+              :color="isCompleted ? 'positive' : 'accent'"
+              :icon="isCompleted ? 'check_circle' : 'check'"
+              :label="isCompleted ? 'Concluída!' : 'Concluir Aula'"
+              class="font-outfit text-weight-bold pulse-glow q-py-sm rounded-borders full-width"
+              @click="toggleCompletion"
+            />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -49,11 +55,15 @@
         indicator-color="accent"
         class="text-grey-4 border-bottom"
         align="justify"
+        dense
+        narrow-indicator
+        outside-arrows
+        mobile-arrows
       >
         <q-tab name="vocabulary" icon="translate" label="Vocabulário" />
-        <q-tab name="practice" icon="hearing" label="Prática de Pronúncia" />
-        <q-tab name="shadowing" icon="record_voice_over" label="Modo Shadowing" />
-        <q-tab name="notes" icon="edit_note" label="Minhas Anotações" />
+        <q-tab name="practice" icon="hearing" label="Prática" />
+        <q-tab name="shadowing" icon="record_voice_over" label="Shadowing" />
+        <q-tab name="notes" icon="edit_note" label="Notas" />
       </q-tabs>
 
       <q-tab-panels v-model="activeTab" animated class="bg-transparent text-white">
@@ -83,12 +93,12 @@
                 class="flex items-start q-gutter-x-sm dialogue-bubble q-pa-sm rounded-borders"
                 style="background: rgba(255, 255, 255, 0.03);"
               >
-                <q-avatar size="28px" :color="line.speaker === 'Gabriel' ? 'primary' : 'deep-purple-9'" text-color="white" class="text-weight-bold text-caption font-outfit">
-                  {{ line.speaker.charAt(0) }}
+                <q-avatar size="28px" :color="isUserSpeaker(line.speaker) ? 'primary' : 'deep-purple-9'" text-color="white" class="text-weight-bold text-caption font-outfit">
+                  {{ isUserSpeaker(line.speaker) ? (authStore.userAvatar || '💻') : line.speaker.charAt(0) }}
                 </q-avatar>
                 <div class="col">
-                  <div class="text-caption text-weight-bold text-accent">{{ line.speaker }}</div>
-                  <div class="text-body2 text-white">{{ line.text }}</div>
+                  <div class="text-caption text-weight-bold text-accent">{{ getSpeakerName(line.speaker) }}</div>
+                  <div class="text-body2 text-white">{{ formatUserText(line.text) }}</div>
                 </div>
                 <q-btn
                   round
@@ -97,7 +107,7 @@
                   size="xs"
                   color="grey-4"
                   icon="volume_up"
-                  @click="playSpeech(line.text)"
+                  @click="playSpeech(formatUserText(line.text))"
                 >
                   <q-tooltip class="bg-grey-9 text-caption">Ouvir fala</q-tooltip>
                 </q-btn>
@@ -162,7 +172,7 @@
                   <!-- Verso (Tradução e exemplo) -->
                   <div v-else class="animate-fade-in q-py-sm">
                     <div class="text-h6 text-weight-bold text-warning font-outfit">{{ item.translation }}</div>
-                    <div class="text-body2 text-grey-3 italic q-mt-sm">"{{ item.example }}"</div>
+                    <div class="text-body2 text-grey-3 italic q-mt-sm">"{{ formatUserText(item.example) }}"</div>
                   </div>
                 </div>
               </div>
@@ -257,6 +267,7 @@ import { useRoute } from 'vue-router'
 import { useStudyStore } from '../stores/study'
 import { useSettingsStore } from '../stores/settings'
 import { useAchievementsStore } from '../stores/achievements'
+import { useAuthStore } from '../stores/auth'
 import lessonsData from '../data/lessonsData'
 import speechService from '../services/speech'
 import PronunciationPracticeCard from '../components/PronunciationPracticeCard.vue'
@@ -269,6 +280,24 @@ const route = useRoute()
 const studyStore = useStudyStore()
 const settingsStore = useSettingsStore()
 const achievementsStore = useAchievementsStore()
+const authStore = useAuthStore()
+
+function formatUserText(text) {
+  if (!text) return ''
+  const name = authStore.displayName || 'Dev'
+  return text.replace(/\{userName\}|\bGabriel\b/g, name)
+}
+
+function getSpeakerName(speaker) {
+  if (speaker === 'Gabriel' || speaker === '{userName}' || speaker === 'Você') {
+    return authStore.displayName || 'Você'
+  }
+  return speaker
+}
+
+function isUserSpeaker(speaker) {
+  return speaker === 'Gabriel' || speaker === '{userName}' || speaker === 'Você'
+}
 
 const lesson = ref(null)
 const activeTab = ref('vocabulary')

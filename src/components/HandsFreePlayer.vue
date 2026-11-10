@@ -196,6 +196,7 @@ import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { speechService } from '../services/speech'
 import { useSettingsStore } from '../stores/settings'
 import { useStudyStore } from '../stores/study'
+import { useAuthStore } from '../stores/auth'
 import confetti from 'canvas-confetti'
 
 const props = defineProps({
@@ -213,6 +214,20 @@ const emit = defineEmits(['update:modelValue'])
 
 const settingsStore = useSettingsStore()
 const studyStore = useStudyStore()
+const authStore = useAuthStore()
+
+function formatUserText(text) {
+  if (!text) return ''
+  const name = authStore.displayName || 'Dev'
+  return text.replace(/\{userName\}|\bGabriel\b/g, name)
+}
+
+function formatSpeaker(speaker) {
+  if (speaker === 'Você' || speaker === '{userName}' || speaker === 'Gabriel') {
+    return authStore.displayName || 'Você'
+  }
+  return speaker
+}
 
 const isOpen = computed({
   get: () => props.modelValue,
@@ -259,8 +274,8 @@ const playlist = computed(() => {
         id: `phrase_${idx}`,
         type: 'phrase',
         categoryLabel: 'Frase de Uso Real',
-        text: p.english,
-        translation: p.portuguese
+        text: formatUserText(p.english),
+        translation: formatUserText(p.portuguese)
       })
     })
   }
@@ -271,9 +286,9 @@ const playlist = computed(() => {
       items.push({
         id: `dialogue_${idx}`,
         type: 'dialogue',
-        categoryLabel: `Diálogo • ${d.speaker}`,
-        text: d.text,
-        translation: `Fala de ${d.speaker}`
+        categoryLabel: `Diálogo • ${formatSpeaker(d.speaker)}`,
+        text: formatUserText(d.text),
+        translation: `Fala de ${formatSpeaker(d.speaker)}`
       })
     })
   }
@@ -390,7 +405,10 @@ async function runPlaybackStep() {
     // 4. Avança para o próximo item
     advanceToNext()
   } catch (err) {
-    console.error('Erro no ciclo de reprodução hands-free:', err)
+    if (err?.error === 'interrupted' || err?.error === 'canceled') {
+      return
+    }
+    console.warn('Ciclo hands-free pausado:', err)
     pausePlayback()
   }
 }

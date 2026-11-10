@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', {
     loading: false,
     syncing: false,
     localProfile: {
-      fullName: 'Gabriel',
+      fullName: '',
       jobTitle: 'Desenvolvedor Full-Stack',
       targetLevel: 'Fluência Prática (C1)',
       avatar: '💻'
@@ -24,11 +24,11 @@ export const useAuthStore = defineStore('auth', {
     userId: (state) => state.user?.id || null,
     userEmail: (state) => state.user?.email || '',
     displayName: (state) => {
-      const name = state.user?.user_metadata?.full_name || state.localProfile?.fullName || state.user?.email?.split('@')[0] || 'Visitante'
+      const name = state.user?.user_metadata?.full_name || state.localProfile?.fullName || (state.user?.email ? state.user.email.split('@')[0] : '') || 'Estudante'
       return name.trim().split(' ')[0]
     },
     fullDisplayName: (state) => {
-      return state.user?.user_metadata?.full_name || state.localProfile?.fullName || state.user?.email?.split('@')[0] || 'Visitante'
+      return state.user?.user_metadata?.full_name || state.localProfile?.fullName || (state.user?.email ? state.user.email.split('@')[0] : '') || 'Estudante'
     },
     jobTitle: (state) => {
       return state.user?.user_metadata?.job_title || state.localProfile?.jobTitle || 'Desenvolvedor Full-Stack'

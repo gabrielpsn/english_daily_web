@@ -93,26 +93,30 @@
             </div>
 
             <!-- Botões de Início de Chamada -->
-            <div class="q-mt-lg flex q-gutter-x-sm">
-              <q-btn
-                unelevated
-                color="positive"
-                text-color="dark"
-                icon="call"
-                label="Receber Ligação"
-                class="font-outfit text-weight-bold rounded-borders col"
-                @click.stop="triggerIncomingCall(persona)"
-              >
-                <q-tooltip class="bg-grey-9 text-caption">O celular vai tocar como chamada recebida</q-tooltip>
-              </q-btn>
-              <q-btn
-                outline
-                color="white"
-                icon="videocam"
-                label="Discar"
-                class="font-outfit text-weight-bold rounded-borders col"
-                @click.stop="startOutgoingCall(persona)"
-              />
+            <div class="q-mt-lg row q-col-gutter-xs">
+              <div class="col-12 col-sm-6">
+                <q-btn
+                  unelevated
+                  color="positive"
+                  text-color="dark"
+                  icon="call"
+                  label="Receber Ligação"
+                  class="font-outfit text-weight-bold rounded-borders full-width"
+                  @click.stop="triggerIncomingCall(persona)"
+                >
+                  <q-tooltip class="bg-grey-9 text-caption">O celular vai tocar como chamada recebida</q-tooltip>
+                </q-btn>
+              </div>
+              <div class="col-12 col-sm-6">
+                <q-btn
+                  outline
+                  color="white"
+                  icon="videocam"
+                  label="Discar"
+                  class="font-outfit text-weight-bold rounded-borders full-width"
+                  @click.stop="startOutgoingCall(persona)"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -284,9 +288,11 @@
             :class="{ 'video-disabled': !isCameraOn }"
           ></video>
           <div v-if="!isCameraOn" class="camera-off-placeholder flex flex-center">
-            <q-icon name="videocam_off" color="grey-6" size="24px" />
+            <q-avatar size="38px" color="deep-purple-9" text-color="white" class="shadow-4 text-weight-bold font-outfit">
+              {{ authStore.userAvatar || '💻' }}
+            </q-avatar>
           </div>
-          <div class="pip-label">Você</div>
+          <div class="pip-label">{{ authStore.displayName || 'Você' }}</div>
         </div>
       </div>
 
@@ -399,24 +405,28 @@
         </div>
 
         <!-- Ações pós-chamada -->
-        <div class="flex justify-center items-center q-gutter-x-md">
-          <q-btn
-            outline
-            color="white"
-            icon="replay"
-            label="Ligar Novamente"
-            class="font-outfit text-weight-bold rounded-borders q-py-sm q-px-lg"
-            @click="triggerIncomingCall(selectedPersona)"
-          />
-          <q-btn
-            unelevated
-            color="positive"
-            text-color="dark"
-            icon="dashboard"
-            label="Voltar ao Dashboard"
-            class="font-outfit text-weight-bold rounded-borders q-py-sm q-px-lg pulse-glow"
-            :to="{ name: 'dashboard' }"
-          />
+        <div class="row q-col-gutter-sm justify-center items-center">
+          <div class="col-12 col-sm-auto">
+            <q-btn
+              outline
+              color="white"
+              icon="replay"
+              label="Ligar Novamente"
+              class="font-outfit text-weight-bold rounded-borders q-py-sm full-width"
+              @click="triggerIncomingCall(selectedPersona)"
+            />
+          </div>
+          <div class="col-12 col-sm-auto">
+            <q-btn
+              unelevated
+              color="positive"
+              text-color="dark"
+              icon="dashboard"
+              label="Voltar ao Dashboard"
+              class="font-outfit text-weight-bold rounded-borders q-py-sm pulse-glow full-width"
+              :to="{ name: 'dashboard' }"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -554,8 +564,9 @@ async function startLocalCamera() {
       localVideoRef.value.srcObject = localMediaStream
     }
   } catch (err) {
-    console.warn('Câmera não permitida ou indisponível:', err)
+    // Se o dispositivo não possui câmera física ou permissão negada, transiciona suavemente para o avatar
     isCameraOn.value = false
+    localMediaStream = null
   }
 }
 
@@ -628,7 +639,9 @@ function startListeningToUser() {
       }
     },
     (err) => {
-      console.warn('Erro no reconhecimento de voz:', err)
+      if (err?.error !== 'no-speech' && err?.error !== 'aborted') {
+        console.warn('Aviso no reconhecimento de voz:', err)
+      }
       isUserListening.value = false
     },
     () => {

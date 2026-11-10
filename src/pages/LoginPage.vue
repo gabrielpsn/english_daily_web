@@ -209,20 +209,43 @@ async function handleRegister() {
 
   :deep(.q-field__control) {
     border-radius: 28px !important;
-    background: rgba(30, 25, 50, 0.35) !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    background: rgba(30, 25, 50, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    overflow: hidden !important;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
 
+  :deep(.q-field__native),
+  :deep(input) {
+    border-radius: inherit !important;
+    color: #ffffff !important;
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px #211938 inset !important;
+      box-shadow: 0 0 0 1000px #211938 inset !important;
+      -webkit-text-fill-color: #ffffff !important;
+      caret-color: #ffffff !important;
+      border-radius: inherit !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  }
+
+  :deep(.q-field__label) {
+    color: #b39ddb !important;
+  }
+
   :deep(.q-field__control:hover) {
-    border-color: rgba(149, 117, 205, 0.35) !important;
-    background: rgba(30, 25, 50, 0.45) !important;
+    border-color: rgba(149, 117, 205, 0.45) !important;
+    background: rgba(30, 25, 50, 0.55) !important;
   }
 
   &.q-field--focused :deep(.q-field__control) {
     border-color: #9575cd !important;
-    box-shadow: 0 0 12px rgba(149, 117, 205, 0.3) !important;
-    background: rgba(30, 25, 50, 0.45) !important;
+    box-shadow: 0 0 16px rgba(149, 117, 205, 0.35) !important;
+    background: rgba(30, 25, 50, 0.55) !important;
   }
 }
 </style>

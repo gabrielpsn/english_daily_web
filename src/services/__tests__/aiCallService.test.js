@@ -14,7 +14,7 @@ describe('aiCallService.js - Serviço de Inteligência para Chamada de Vídeo', 
     const sarah = CALL_PERSONAS.find(p => p.id === 'sarah_recruiter')
     expect(sarah).toBeDefined()
     expect(sarah.accent).toBe('UK')
-    expect(sarah.initialGreeting).toContain('Gabriel')
+    expect(sarah.initialGreeting).toContain('{userName}')
 
     const david = CALL_PERSONAS.find(p => p.id === 'david_architect')
     expect(david).toBeDefined()
@@ -24,24 +24,24 @@ describe('aiCallService.js - Serviço de Inteligência para Chamada de Vídeo', 
     expect(alex).toBeDefined()
   })
 
-  it('deve inicializar o histórico da chamada com a saudação da persona', () => {
+  it('deve inicializar o histórico da chamada interpolando o nome dinâmico do usuário', () => {
     const persona = CALL_PERSONAS[0]
-    aiCallService.initCall(persona, 'Gabriel')
+    aiCallService.initCall(persona, 'Lucas')
 
     expect(aiCallService.conversationHistory.length).toBe(1)
     expect(aiCallService.conversationHistory[0].speaker).toBe(persona.name)
-    expect(aiCallService.conversationHistory[0].text).toBe(persona.initialGreeting)
+    expect(aiCallService.conversationHistory[0].text).toContain('Lucas')
   })
 
   it('deve gerar respostas locais inteligentes e sugestões de fala no modo offline', async () => {
     const persona = CALL_PERSONAS[0]
-    aiCallService.initCall(persona, 'Gabriel')
+    aiCallService.initCall(persona, 'Lucas')
 
     const result = await aiCallService.getResponse(
       persona,
       'Yes, I can hear you clearly! Nice to meet you.',
       '', // Sem API key -> usa motor local inteligente
-      'Gabriel'
+      'Lucas'
     )
 
     expect(result).toBeDefined()

@@ -13,11 +13,11 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title class="flex items-center text-brand">
-          <q-avatar size="36px" class="q-mr-sm">
-            <q-icon name="school" color="accent" size="28px" />
+        <q-toolbar-title class="flex items-center text-brand no-wrap overflow-hidden">
+          <q-avatar size="32px" class="q-mr-xs">
+            <q-icon name="school" color="accent" size="24px" />
           </q-avatar>
-          <span class="text-weight-bold text-gradient-purple font-outfit">English Study Pro</span>
+          <span class="text-weight-bold text-gradient-purple font-outfit text-truncate" style="max-width: 160px;">English Study</span>
         </q-toolbar-title>
 
         <!-- Stats rápidos no Header -->

@@ -90,7 +90,7 @@ export const exportService = {
    * @returns {Promise<boolean>} Sucesso da exportação
    */
   async exportToPDF(stats) {
-    const { progress, completedCount, streak, totalMinutes, notes, completedLessons, userName = 'Gabriel' } = stats
+    const { progress, completedCount, streak, totalMinutes, notes, completedLessons, userName = 'Estudante' } = stats
 
     try {
       const { jsPDF } = await import('jspdf')

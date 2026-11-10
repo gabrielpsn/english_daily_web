@@ -100,7 +100,7 @@
         color="accent"
         icon="call"
         label="Entrar na Daily Standup (2 Min)"
-        class="font-outfit text-weight-bold pulse-glow q-py-sm q-px-xl rounded-borders"
+        class="font-outfit text-weight-bold pulse-glow q-py-sm q-px-xl rounded-borders full-width-mobile"
         @click="startScrumSession"
       />
     </div>
@@ -227,29 +227,29 @@
 
         <!-- Botões de Ação: Microfone e Avançar -->
         <div class="row items-center justify-between q-col-gutter-sm">
-          <div class="col-12 col-sm-6 flex items-center q-gutter-x-sm">
+          <div class="col-12 col-sm-auto">
             <!-- Botão Falar (STT) -->
             <q-btn
               unelevated
               :color="isListening ? 'negative' : 'deep-purple-8'"
               :icon="isListening ? 'mic_off' : 'mic'"
               :label="isListening ? 'Parar Escuta' : 'Gravar Minha Resposta'"
-              class="font-outfit text-weight-bold rounded-borders pulse-glow"
+              class="font-outfit text-weight-bold rounded-borders pulse-glow full-width"
               @click="toggleListening"
             />
-            <span v-if="isListening" class="text-caption text-red-4 font-outfit text-weight-bold animate-pulse">
+            <div v-if="isListening" class="text-caption text-red-4 font-outfit text-weight-bold animate-pulse q-mt-xs text-center">
               Ouvindo sua fala...
-            </span>
+            </div>
           </div>
 
-          <div class="col-12 col-sm-6 flex justify-end">
+          <div class="col-12 col-sm-auto">
             <q-btn
               unelevated
               color="accent"
               icon-right="arrow_forward"
-              :label="currentStep === 3 ? 'Finalizar Meu Standup' : 'Confirmar & Próxima Pergunta'"
+              :label="currentStep === 3 ? 'Finalizar Meu Standup' : 'Confirmar & Próxima'"
               :disable="!userAnswers[currentStep] || !userAnswers[currentStep].trim()"
-              class="font-outfit text-weight-bold rounded-borders q-py-sm q-px-lg full-width-mobile"
+              class="font-outfit text-weight-bold rounded-borders q-py-sm full-width"
               @click="submitCurrentAnswer"
             />
           </div>

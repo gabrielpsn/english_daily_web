@@ -14,8 +14,8 @@ export const CALL_PERSONAS = [
     accent: 'UK',
     color: 'deep-purple-7',
     context: 'Entrevista de triagem (Pre-Screening Call) de 5 minutos para uma vaga remota em dólares/libras.',
-    initialGreeting: "Hello Gabriel! Thanks for jumping on the call so quickly. Can you hear and see me alright?",
-    initialTranslation: "Olá Gabriel! Obrigado por entrar na chamada tão rápido. Consegue me ouvir e ver bem?",
+    initialGreeting: "Hello {userName}! Thanks for jumping on the call so quickly. Can you hear and see me alright?",
+    initialTranslation: "Olá {userName}! Obrigado por entrar na chamada tão rápido. Consegue me ouvir e ver bem?",
     suggestions: [
       "Hi Sarah! Yes, loud and clear. Great to meet you!",
       "Hello! Everything is working on my end. How are you doing today?",
@@ -54,8 +54,8 @@ export const CALL_PERSONAS = [
       },
       {
         triggerWords: ['salary', 'usd', 'dollars', 'range', 'month', 'rate', 'package', 'open'],
-        reply: "That fits right into our budget! I will forward our technical assessment and schedule our next round. Thank you so much, Gabriel!",
-        translation: "Isso se encaixa perfeitamente no nosso orçamento! Vou encaminhar nosso teste técnico e agendar a próxima rodada. Muito obrigado, Gabriel!",
+        reply: "That fits right into our budget! I will forward our technical assessment and schedule our next round. Thank you so much, {userName}!",
+        translation: "Isso se encaixa perfeitamente no nosso orçamento! Vou encaminhar nosso teste técnico e agendar a próxima rodada. Muito obrigado, {userName}!",
         hints: [
           "Thank you, Sarah! Looking forward to the next steps. Have a great day!",
           "Sounds wonderful! I will keep an eye on my inbox. Talk soon!",
@@ -73,8 +73,8 @@ export const CALL_PERSONAS = [
     accent: 'US',
     color: 'blue-8',
     context: 'Reunião de emergência de arquitetura: Investigação de latência e deadlocks no banco de produção.',
-    initialGreeting: "Hey Gabriel, glad you picked up! Our monitoring just flagged a critical latency spike on the checkout API. Are you near your terminal?",
-    initialTranslation: "Ei Gabriel, que bom que atendeu! Nosso monitoramento acabou de disparar um pico crítico de latência na API de checkout. Está perto do seu terminal?",
+    initialGreeting: "Hey {userName}, glad you picked up! Our monitoring just flagged a critical latency spike on the checkout API. Are you near your terminal?",
+    initialTranslation: "Ei {userName}, que bom que atendeu! Nosso monitoramento acabou de disparar um pico crítico de latência na API de checkout. Está perto do seu terminal?",
     suggestions: [
       "Hey David! Yes, I have my terminal open right now. What do the metrics show?",
       "Hi David! I'm on it. Is it related to the database connection pool?",
@@ -103,8 +103,8 @@ export const CALL_PERSONAS = [
       },
       {
         triggerWords: ['index', 'composite', 'queue', 'kafka', 'bullmq', 'async', 'test', 'ci'],
-        reply: "Solid architectural solution, Gabriel. System is stable now. Write a quick post-mortem doc in Notion when you can. Great job troubleshooting!",
-        translation: "Solução arquitetural sólida, Gabriel. O sistema está estável agora. Escreva um breve post-mortem no Notion quando puder. Ótimo trabalho!",
+        reply: "Solid architectural solution, {userName}. System is stable now. Write a quick post-mortem doc in Notion when you can. Great job troubleshooting!",
+        translation: "Solução arquitetural sólida, {userName}. O sistema está estável agora. Escreva um breve post-mortem no Notion quando puder. Ótimo trabalho!",
         hints: [
           "Will do, David! I'll document the root cause and share the PR shortly.",
           "Glad we resolved it quickly! I'll start the post-mortem right away.",
@@ -122,8 +122,8 @@ export const CALL_PERSONAS = [
     accent: 'US',
     color: 'teal-8',
     context: 'Conversa informal 1-on-1 de alinhamento quinzenal sobre carreira, sprint e bem-estar.',
-    initialGreeting: "Hey Gabriel! How's your week treating you so far? Everything going smooth with the sprint?",
-    initialTranslation: "Ei Gabriel! Como está sendo sua semana até aqui? Tudo correndo bem com a sprint?",
+    initialGreeting: "Hey {userName}! How's your week treating you so far? Everything going smooth with the sprint?",
+    initialTranslation: "Ei {userName}! Como está sendo sua semana até aqui? Tudo correndo bem com a sprint?",
     suggestions: [
       "Hey Alex! It's going great, thanks. Making steady progress on my sprint tickets.",
       "Hi Alex! Pretty busy week, but we are on track to hit our sprint goals.",
@@ -152,8 +152,8 @@ export const CALL_PERSONAS = [
       },
       {
         triggerWords: ['kubernetes', 'microservices', 'leadership', 'performance', 'frontend', 'cloud', 'architecture', 'lead'],
-        reply: "Love that ambition! I will pair you with our cloud engineer on the next milestone. Thanks for the chat, Gabriel. Keep up the fantastic work!",
-        translation: "Adoro essa ambição! Vou te colocar em dupla com nosso engenheiro de nuvem no próximo marco. Valeu pela conversa, Gabriel. Continue com o trabalho fantástico!",
+        reply: "Love that ambition! I will pair you with our cloud engineer on the next milestone. Thanks for the chat, {userName}. Keep up the fantastic work!",
+        translation: "Adoro essa ambição! Vou te colocar em dupla com nosso engenheiro de nuvem no próximo marco. Valeu pela conversa, {userName}. Continue com o trabalho fantástico!",
         hints: [
           "Thanks so much, Alex! Really appreciate your support and mentorship.",
           "Awesome, looking forward to it! Talk to you on Slack.",
@@ -175,12 +175,16 @@ class AICallService {
    * @param {Object} persona 
    * @param {string} userName 
    */
-  initCall(persona, userName = 'Gabriel') {
+  initCall(persona, userName = 'Estudante') {
+    const name = userName?.trim() || 'Estudante'
+    const greeting = (persona.initialGreeting || '').replace(/\{userName\}|\bGabriel\b/g, name)
+    const translation = (persona.initialTranslation || '').replace(/\{userName\}|\bGabriel\b/g, name)
+
     this.conversationHistory = [
       {
         speaker: persona.name,
-        text: persona.initialGreeting,
-        translation: persona.initialTranslation,
+        text: greeting,
+        translation,
         role: 'model'
       }
     ]
@@ -192,13 +196,15 @@ class AICallService {
    * @param {Object} persona - Persona participante da chamada
    * @param {string} userMessage - Transcrição da fala do usuário
    * @param {string} apiKey - Chave da API Gemini (opcional)
-   * @param {string} userName - Nome do usuário (ex: Gabriel)
+   * @param {string} userName - Nome do usuário (ex: Estudante)
    * @returns {Promise<{ reply: string, hints: Array<string> }>}
    */
-  async getResponse(persona, userMessage, apiKey = '', userName = 'Gabriel') {
+  async getResponse(persona, userMessage, apiKey = '', userName = 'Estudante') {
+    const name = userName?.trim() || 'Estudante'
+
     // Registra a fala do usuário
     this.conversationHistory.push({
-      speaker: userName,
+      speaker: name,
       text: userMessage,
       role: 'user'
     })
@@ -207,7 +213,7 @@ class AICallService {
     const effectiveKey = apiKey || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY) || ''
     if (effectiveKey) {
       try {
-        const geminiReply = await this.callGeminiAPI(persona, userMessage, effectiveKey, userName)
+        const geminiReply = await this.callGeminiAPI(persona, userMessage, effectiveKey, name)
         if (geminiReply) {
           this.conversationHistory.push({
             speaker: persona.name,
@@ -229,7 +235,7 @@ class AICallService {
     }
 
     // 2. Motor Local Inteligente (Zero Config / Offline First)
-    const localResult = this.generateLocalResponse(persona, userMessage)
+    const localResult = this.generateLocalResponse(persona, userMessage, name)
     this.conversationHistory.push({
       speaker: persona.name,
       text: localResult.reply,
@@ -284,9 +290,9 @@ CRITICAL RULES FOR REALISTIC CONVERSATIONAL CALL:
   /**
    * Motor de Resposta Local Inteligente baseado no cenário da persona
    */
-  generateLocalResponse(persona, userMessage) {
+  generateLocalResponse(persona, userMessage, userName = 'Estudante') {
     const scenario = persona.offlineScenario || []
-    const lower = userMessage.toLowerCase()
+    const name = userName?.trim() || 'Estudante'
 
     // Encontra o próximo passo no roteiro
     const step = scenario[this.currentScenarioIndex] || scenario[scenario.length - 1]
@@ -296,17 +302,19 @@ CRITICAL RULES FOR REALISTIC CONVERSATIONAL CALL:
     }
 
     if (step) {
+      const reply = (step.reply || '').replace(/\{userName\}|\bGabriel\b/g, name)
+      const translation = (step.translation || '').replace(/\{userName\}|\bGabriel\b/g, name)
       return {
-        reply: step.reply,
-        translation: step.translation || '',
+        reply,
+        translation,
         hints: step.hints || []
       }
     }
 
     // Resposta genérica amigável se exceder roteiro
     return {
-      reply: "That sounds great, Gabriel! Thanks for running through this with me. Let's sync up again soon!",
-      translation: "Isso parece ótimo, Gabriel! Obrigado por repassar isso comigo. Vamos nos alinhar novamente em breve!",
+      reply: `That sounds great, ${name}! Thanks for running through this with me. Let's sync up again soon!`,
+      translation: `Isso parece ótimo, ${name}! Obrigado por repassar isso comigo. Vamos nos alinhar novamente em breve!`,
       hints: [
         "Sounds like a plan! Talk to you soon.",
         "Thanks for your time! Have a great day.",

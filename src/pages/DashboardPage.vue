@@ -17,7 +17,7 @@
             unelevated
             color="accent"
             text-color="white"
-            class="text-weight-bold pulse-glow q-py-sm q-px-lg rounded-borders font-outfit"
+            class="text-weight-bold pulse-glow q-py-sm q-px-lg rounded-borders font-outfit full-width-mobile"
             icon="play_arrow"
             :label="`Iniciar Dia ${studyStore.nextLesson.day}: ${studyStore.nextLesson.title}`"
             :to="{ name: 'lesson-detail', params: { id: studyStore.nextLesson.day } }"
@@ -124,13 +124,13 @@
               </p>
             </div>
           </div>
-          <div class="flex justify-end q-mt-sm">
+          <div class="q-mt-md">
             <q-btn
               unelevated
               color="accent"
               icon="groups"
               label="Entrar na Daily"
-              class="font-outfit text-weight-bold rounded-borders q-py-xs q-px-md"
+              class="font-outfit text-weight-bold rounded-borders q-py-sm full-width"
               :to="{ name: 'daily-simulator' }"
             />
           </div>
@@ -154,14 +154,14 @@
               </p>
             </div>
           </div>
-          <div class="flex justify-end q-mt-sm">
+          <div class="q-mt-md">
             <q-btn
               unelevated
               color="positive"
               text-color="dark"
               icon="call"
               label="Simular Chamada"
-              class="font-outfit text-weight-bold rounded-borders q-py-xs q-px-md pulse-glow"
+              class="font-outfit text-weight-bold rounded-borders q-py-sm full-width pulse-glow"
               :to="{ name: 'video-call' }"
             />
           </div>
@@ -197,16 +197,18 @@
             </div>
           </div>
 
-          <div class="flex items-center justify-between q-mt-lg">
-            <span class="text-caption text-grey-5">Estimativa: ~15 minutos</span>
-            <q-btn
-              unelevated
-              color="accent"
-              icon="chevron_right"
-              label="Iniciar Agora"
-              class="font-outfit text-weight-bold"
-              :to="{ name: 'lesson-detail', params: { id: studyStore.nextLesson.day } }"
-            />
+          <div class="row items-center justify-between q-mt-lg q-col-gutter-sm">
+            <div class="col-12 col-sm-auto text-caption text-grey-5">Estimativa: ~15 minutos</div>
+            <div class="col-12 col-sm-auto">
+              <q-btn
+                unelevated
+                color="accent"
+                icon="chevron_right"
+                label="Iniciar Agora"
+                class="font-outfit text-weight-bold full-width"
+                :to="{ name: 'lesson-detail', params: { id: studyStore.nextLesson.day } }"
+              />
+            </div>
           </div>
         </div>
       </div>
