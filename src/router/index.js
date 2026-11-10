@@ -44,6 +44,11 @@ const routes = [
         component: () => import('../pages/DailySimulatorPage.vue')
       },
       {
+        path: 'video-call',
+        name: 'video-call',
+        component: () => import('../pages/VideoCallPage.vue')
+      },
+      {
         path: 'dictionary',
         name: 'dictionary',
         component: () => import('../pages/DictionaryPage.vue')

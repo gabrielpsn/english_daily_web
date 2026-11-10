@@ -105,32 +105,68 @@
     <!-- Habit Grid Estilo GitHub para Devs (Componente Modular) -->
     <ConsistencyHeatmap :study-dates="studyStore.studyDates" />
 
-    <!-- Banner Interativo: Daily Scrum Simulator -->
-    <div class="glass-card q-pa-md border-all flex items-center justify-between q-col-gutter-sm bg-gradient-scrum">
-      <div class="flex items-center q-gutter-x-md">
-        <q-avatar size="52px" color="accent" text-color="white" class="shadow-4">
-          <q-icon name="support_agent" size="30px" />
-        </q-avatar>
-        <div>
-          <div class="text-subtitle1 text-weight-bold font-outfit text-white flex items-center">
-            <span>Simulador de Daily Scrum (Tech Lead Alex)</span>
-            <q-badge color="accent" class="q-ml-sm text-caption text-weight-bold font-outfit">
-              Prática Ágil 🚀
-            </q-badge>
+    <!-- Simuladores Interativos de Conversação (Daily Scrum & Chamada WhatsApp) -->
+    <div class="row q-col-gutter-md">
+      <!-- Card 1: Daily Scrum -->
+      <div class="col-12 col-md-6">
+        <div class="glass-card q-pa-md border-all h-100 flex flex-column justify-between bg-gradient-scrum">
+          <div class="flex items-center q-gutter-x-md q-mb-sm">
+            <q-avatar size="48px" color="accent" text-color="white" class="shadow-4">
+              <q-icon name="support_agent" size="28px" />
+            </q-avatar>
+            <div>
+              <div class="text-subtitle1 text-weight-bold font-outfit text-white flex items-center">
+                <span>Daily Scrum Simulator</span>
+                <q-badge color="accent" class="q-ml-sm text-caption font-outfit">Ágil 🚀</q-badge>
+              </div>
+              <p class="text-caption text-grey-4 q-my-none">
+                Reunião de 60-90s com o Tech Lead (Yesterday, Today, Blockers).
+              </p>
+            </div>
           </div>
-          <p class="text-caption text-grey-4 q-my-none">
-            Simule a reunião diária de um time internacional (Yesterday, Today, Blockers) com reconhecimento de voz.
-          </p>
+          <div class="flex justify-end q-mt-sm">
+            <q-btn
+              unelevated
+              color="accent"
+              icon="groups"
+              label="Entrar na Daily"
+              class="font-outfit text-weight-bold rounded-borders q-py-xs q-px-md"
+              :to="{ name: 'daily-simulator' }"
+            />
+          </div>
         </div>
       </div>
-      <q-btn
-        unelevated
-        color="accent"
-        icon="groups"
-        label="Entrar na Daily (2 Min)"
-        class="font-outfit text-weight-bold rounded-borders q-py-sm q-px-lg pulse-glow"
-        :to="{ name: 'daily-simulator' }"
-      />
+
+      <!-- Card 2: Chamada de Vídeo WhatsApp -->
+      <div class="col-12 col-md-6">
+        <div class="glass-card q-pa-md border-all h-100 flex flex-column justify-between bg-gradient-wa">
+          <div class="flex items-center q-gutter-x-md q-mb-sm">
+            <q-avatar size="48px" color="positive" text-color="dark" class="shadow-4">
+              <q-icon name="videocam" size="28px" />
+            </q-avatar>
+            <div>
+              <div class="text-subtitle1 text-weight-bold font-outfit text-white flex items-center">
+                <span>Ligação WhatsApp com IA</span>
+                <q-badge color="positive" text-color="dark" class="q-ml-sm text-caption font-outfit">Novo 📱</q-badge>
+              </div>
+              <p class="text-caption text-grey-4 q-my-none">
+                Simule chamada de vídeo com recrutadora ou arquiteto gringo.
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-end q-mt-sm">
+            <q-btn
+              unelevated
+              color="positive"
+              text-color="dark"
+              icon="call"
+              label="Simular Chamada"
+              class="font-outfit text-weight-bold rounded-borders q-py-xs q-px-md pulse-glow"
+              :to="{ name: 'video-call' }"
+            />
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Seção Inferior: Próxima Aula & Flashcards -->
@@ -250,6 +286,10 @@ const lastStudyText = computed(() => {
 }
 .bg-gradient-scrum {
   background: linear-gradient(135deg, rgba(149, 117, 205, 0.12) 0%, rgba(20, 15, 36, 0.8) 100%);
+  border-radius: 14px;
+}
+.bg-gradient-wa {
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.1) 0%, rgba(14, 24, 18, 0.85) 100%);
   border-radius: 14px;
 }
 </style>

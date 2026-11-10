@@ -156,8 +156,9 @@ const activeTab = ref('dashboard')
 const drawerMenuItems = [
   { label: 'Painel Geral', icon: 'dashboard', route: 'dashboard' },
   { label: 'Aulas diárias', icon: 'menu_book', route: 'lessons' },
-  { label: 'Dicionário Dev (270)', icon: 'auto_stories', route: 'dictionary' },
+  { label: 'Chamada de Vídeo IA', icon: 'videocam', route: 'video-call' },
   { label: 'Daily Scrum Simulator', icon: 'groups', route: 'daily-simulator' },
+  { label: 'Dicionário Dev (270)', icon: 'auto_stories', route: 'dictionary' },
   { label: 'Minha Evolução', icon: 'bar_chart', route: 'statistics' },
   { label: 'Minhas Conquistas', icon: 'military_tech', route: 'achievements' },
   { label: 'Preferências', icon: 'settings', route: 'settings' }
