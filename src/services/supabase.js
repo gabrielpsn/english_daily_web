@@ -101,6 +101,32 @@ export const supabaseService = {
   },
 
   /**
+   * Atualiza os metadados do perfil do usuário no Supabase
+   * @param {Object} metadata - Ex: { full_name, job_title, target_level, avatar }
+   */
+  async updateUserProfile(metadata) {
+    if (!supabase) return null
+    const { data, error } = await supabase.auth.updateUser({
+      data: metadata
+    })
+    if (error) throw error
+    return data.user
+  },
+
+  /**
+   * Atualiza a senha do usuário
+   * @param {string} newPassword
+   */
+  async updatePassword(newPassword) {
+    if (!supabase) throw new Error('Supabase não configurado')
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword
+    })
+    if (error) throw error
+    return data
+  },
+
+  /**
    * Escuta as mudanças de estado de autenticação (login/logout/token_refreshed)
    */
   onAuthStateChange(callback) {
@@ -238,7 +264,16 @@ export const supabaseService = {
    */
   async saveAchievements(userId, unlockedAchievements) {
     if (!supabase) return
-    if (unlockedAchievements.length === 0) return
+    if (unlockedAchievements.length === 0) {
+      const { error } = await supabase
+        .from('achievements')
+        .delete()
+        .eq('user_id', userId)
+      if (error) {
+        console.error('Erro ao limpar conquistas no Supabase:', error)
+      }
+      return
+    }
 
     const records = unlockedAchievements.map(ach => ({
       user_id: userId,
@@ -271,6 +306,31 @@ export const supabaseService = {
       throw error
     }
     return data || []
+  },
+
+  /**
+   * Reseta completamente todos os dados e tabelas do usuário na nuvem (Estaca Zero)
+   * @param {string} userId
+   */
+  async resetAllUserData(userId) {
+    if (!supabase || !userId) return
+    try {
+      await Promise.allSettled([
+        supabase.from('study_progress').upsert({
+          user_id: userId,
+          completed_lessons: [],
+          study_dates: [],
+          streak: 0,
+          total_minutes: 0,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id' }),
+        supabase.from('daily_notes').delete().eq('user_id', userId),
+        supabase.from('achievements').delete().eq('user_id', userId)
+      ])
+    } catch (err) {
+      console.error('Erro ao resetar dados do usuário no Supabase:', err)
+      throw err
+    }
   }
 }
 

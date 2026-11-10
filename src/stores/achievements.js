@@ -69,8 +69,13 @@ export const useAchievementsStore = defineStore('achievements', {
      * Carrega os dados salvos do localStorage
      */
     loadAchievements() {
+      // Inicia sempre resetando o estado em memória para evitar resquícios
+      this.achievementsList.forEach(a => {
+        a.unlocked = false
+        a.unlockedAt = null
+      })
       const saved = storageService.load()
-      if (saved && saved.achievements) {
+      if (saved && saved.achievements && Array.isArray(saved.achievements)) {
         saved.achievements.forEach(savedAch => {
           const ach = this.achievementsList.find(a => a.id === savedAch.id)
           if (ach) {

@@ -4,13 +4,61 @@
     <div class="animate-slide-up">
       <h1 class="text-h4 text-weight-bold font-outfit q-my-none text-gradient-purple flex items-center">
         <q-icon name="settings" class="q-mr-sm text-accent" />
-        Configurações e Preferências
+        Configurações e Perfil
       </h1>
-      <p class="text-caption text-grey-5 q-my-none">Personalize o som de fala, sotaque de inglês e gerencie seus backups locais.</p>
+      <p class="text-caption text-grey-5 q-my-none">Gerencie seu perfil de desenvolvedor, personalize voz e controle seus dados.</p>
     </div>
 
-    <!-- Seção 0: Conta e Sincronização na Nuvem (Supabase) -->
-    <div class="glass-card q-pa-lg animate-slide-up relative-position overflow-hidden" style="animation-delay: 0.05s;">
+    <!-- Seção 0: Meu Perfil de Desenvolvedor -->
+    <div class="glass-card q-pa-lg animate-slide-up relative-position overflow-hidden" style="animation-delay: 0.03s;">
+      <div class="row items-center justify-between q-mb-md">
+        <h2 class="text-h6 text-weight-bold font-outfit q-my-none text-white flex items-center">
+          <q-icon name="badge" color="accent" size="22px" class="q-mr-sm" />
+          <span>Meu Perfil de Desenvolvedor</span>
+        </h2>
+        <q-btn
+          outline
+          color="accent"
+          icon="edit"
+          label="Editar Perfil"
+          class="font-outfit text-weight-bold rounded-borders text-caption"
+          @click="openProfileModal"
+        />
+      </div>
+
+      <div class="row q-col-gutter-md items-center">
+        <div class="col-12 col-sm-8 flex items-center q-gutter-x-md">
+          <q-avatar size="64px" color="deep-purple-9" text-color="white" class="shadow-4 font-outfit text-h4">
+            {{ authStore.userAvatar || '💻' }}
+          </q-avatar>
+          <div>
+            <div class="text-h6 text-weight-bold font-outfit text-white">
+              {{ authStore.fullDisplayName }}
+            </div>
+            <div class="text-caption text-accent font-outfit text-weight-bold">
+              {{ authStore.jobTitle }}
+            </div>
+            <div class="text-caption text-grey-4 flex items-center q-mt-xs">
+              <q-icon name="flag" size="14px" class="q-mr-xs text-warning" />
+              <span>Meta: {{ authStore.targetLevel }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-4 flex justify-end">
+          <q-badge
+            color="dark"
+            text-color="grey-4"
+            class="font-outfit text-caption border-all q-py-xs q-px-sm"
+          >
+            {{ authStore.isAuthenticated ? `Nuvem: ${authStore.userEmail}` : 'Modo Estudante Local' }}
+          </q-badge>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção 1: Conta e Sincronização na Nuvem (Supabase) -->
+    <div class="glass-card q-pa-lg animate-slide-up relative-position overflow-hidden" style="animation-delay: 0.06s;">
       <!-- Glowing glass border decoration -->
       <div class="absolute-top-right q-ma-sm text-caption text-grey-5 gt-xs">
         <q-icon name="cloud" size="16px" class="q-mr-xs" />
@@ -357,24 +405,155 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de Edição de Perfil do Desenvolvedor -->
+    <q-dialog v-model="profileModalOpen">
+      <q-card class="bg-dark text-white q-pa-md border-all" style="max-width: 520px; width: 100%;">
+        <q-card-section class="row items-center justify-between q-pb-none">
+          <div class="text-h6 text-weight-bold font-outfit text-white flex items-center">
+            <q-icon name="manage_accounts" color="accent" size="24px" class="q-mr-sm" />
+            <span>Editar Meu Perfil</span>
+          </div>
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-gutter-y-md q-pt-md">
+          <!-- Seleção de Avatar -->
+          <div>
+            <div class="text-caption text-grey-4 font-outfit q-mb-xs">Escolha seu Ícone de Avatar:</div>
+            <div class="flex q-gutter-xs">
+              <q-avatar
+                v-for="emoji in avatarOptions"
+                :key="emoji"
+                size="42px"
+                class="cursor-pointer border-all hover-glow"
+                :color="editProfileForm.avatar === emoji ? 'accent' : 'grey-9'"
+                @click="editProfileForm.avatar = emoji"
+              >
+                {{ emoji }}
+              </q-avatar>
+            </div>
+          </div>
+
+          <!-- Nome Completo -->
+          <q-input
+            v-model="editProfileForm.fullName"
+            label="Nome Completo / Como prefere ser chamado"
+            filled
+            dark
+            class="custom-input font-outfit"
+          />
+
+          <!-- Cargo / Stack Principal -->
+          <q-input
+            v-model="editProfileForm.jobTitle"
+            label="Cargo ou Stack Principal (ex: Full-Stack Dev • Vue & Node)"
+            filled
+            dark
+            class="custom-input font-outfit"
+          />
+
+          <!-- Nível de Inglês Alvo -->
+          <q-select
+            v-model="editProfileForm.targetLevel"
+            :options="levelOptions"
+            label="Nível / Meta de Fluência em Inglês"
+            filled
+            dark
+            class="custom-input font-outfit"
+          />
+
+          <!-- Alteração de Senha (se autenticado) -->
+          <div v-if="authStore.isAuthenticated" class="q-pt-sm border-top">
+            <div class="text-caption text-grey-4 font-outfit q-mb-xs">Segurança da Conta (Opcional):</div>
+            <q-input
+              v-model="newPassword"
+              label="Nova Senha (deixe em branco para não alterar)"
+              type="password"
+              filled
+              dark
+              class="custom-input font-outfit"
+            />
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right" class="q-pt-md">
+          <q-btn flat label="Cancelar" color="grey-4" v-close-popup />
+          <q-btn
+            unelevated
+            label="Salvar Alterações"
+            color="accent"
+            class="font-outfit text-weight-bold"
+            :loading="authStore.loading"
+            @click="saveProfileChanges"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStudyStore } from '../stores/study'
 import { useSettingsStore } from '../stores/settings'
 import { useAchievementsStore } from '../stores/achievements'
 import { useAuthStore } from '../stores/auth'
 import exportService from '../services/export'
+import { supabaseService } from '../services/supabase'
 import { Notify, Dialog } from 'quasar'
 
+const router = useRouter()
 const studyStore = useStudyStore()
 const settingsStore = useSettingsStore()
 const achievementsStore = useAchievementsStore()
 const authStore = useAuthStore()
 
 const backupFile = ref(null)
+
+// Estados de Edição de Perfil
+const profileModalOpen = ref(false)
+const newPassword = ref('')
+const avatarOptions = ['💻', '🚀', '⚡', '🛡️', '🧠', '📱', '☕', '🔥']
+const levelOptions = [
+  'A1/A2 - Iniciante / Básico',
+  'B1/B2 - Intermediário / Técnico',
+  'C1/C2 - Avançado / Fluente para Entrevistas'
+]
+const editProfileForm = ref({
+  fullName: '',
+  jobTitle: '',
+  targetLevel: '',
+  avatar: '💻'
+})
+
+function openProfileModal() {
+  editProfileForm.value = {
+    fullName: authStore.fullDisplayName,
+    jobTitle: authStore.jobTitle,
+    targetLevel: authStore.targetLevel,
+    avatar: authStore.userAvatar
+  }
+  newPassword.value = ''
+  profileModalOpen.value = true
+}
+
+async function saveProfileChanges() {
+  const success = await authStore.updateProfile({
+    fullName: editProfileForm.value.fullName,
+    jobTitle: editProfileForm.value.jobTitle,
+    targetLevel: editProfileForm.value.targetLevel,
+    avatar: editProfileForm.value.avatar
+  })
+
+  if (success) {
+    if (newPassword.value.trim()) {
+      await authStore.changePassword(newPassword.value.trim())
+    }
+    profileModalOpen.value = false
+  }
+}
 
 // Estados de Autenticação local
 const authTab = ref('login')
@@ -567,12 +746,11 @@ function onRestoreBackup(file) {
 
 // Confirma redefinição completa de dados (Double confirmation)
 function confirmResetData() {
-  // Caixa de diálogo nativa rápida do Quasar
   Dialog.create({
     title: '⚠️ Redefinição Crítica',
-    message: 'Você tem certeza ABSOLUTA de que deseja redefinir o seu progresso? Todas as lições concluídas, anotações diárias e o seu streak ativo serão APAGADOS para sempre.',
+    message: 'Você tem certeza ABSOLUTA de que deseja redefinir o seu progresso? Todas as lições concluídas, anotações diárias, streak e histórico serão APAGADOS e você voltará à estaca zero.',
     ok: {
-      label: 'Sim, Apagar Tudo',
+      label: 'Sim, Apagar e Voltar à Estaca Zero',
       color: 'negative',
       flat: false,
       unelevated: true
@@ -584,10 +762,23 @@ function confirmResetData() {
     },
     dark: true,
     persistent: true
-  }).onOk(() => {
-    // Apaga stores e reconfigura
-    studyStore.resetAllData()
+  }).onOk(async () => {
+    // 1. Apaga store de estudo (que já limpa localStorage e Supabase)
+    await studyStore.resetAllData()
+
+    // 2. Apaga conquistas locais e da nuvem
     achievementsStore.resetAchievements()
+
+    // 3. Garante limpeza no Supabase se logado
+    if (authStore.isAuthenticated && authStore.userId) {
+      await supabaseService.resetAllUserData(authStore.userId)
+    }
+
+    // 4. Salva o estado zerado
+    studyStore.saveStudyData()
+    achievementsStore.saveAchievements()
+
+    // 5. Restaura preferências padrão
     settingsStore.$patch({
       theme: 'dark',
       notifications: true,
@@ -601,12 +792,15 @@ function confirmResetData() {
     settingsStore.initSettings()
 
     Notify.create({
-      message: 'Todos os seus dados foram redefinidos para o padrão.',
+      message: 'Progresso redefinido! Você está de volta à estaca zero.',
       color: 'info',
       icon: 'delete_sweep',
       position: 'top',
       timeout: 5000
     })
+
+    // Redireciona para a tela inicial
+    router.push({ name: 'dashboard' })
   })
 }
 </script>

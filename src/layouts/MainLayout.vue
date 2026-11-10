@@ -70,12 +70,17 @@
       class="gt-xs bg-gradient-dark"
     >
       <div class="q-pa-md flex flex-column items-center q-gutter-y-md text-center">
-        <!-- Logo Grande no topo da Drawer -->
+        <!-- Perfil / Avatar no topo da Drawer -->
         <div class="q-py-md">
-          <q-icon name="workspace_premium" size="48px" color="accent" class="pulse-glow rounded-circle q-pa-sm" style="background: rgba(149, 117, 205, 0.1);" />
-          <div class="text-h6 text-weight-bold font-outfit q-mt-sm">{{ authStore.displayName }}</div>
+          <q-avatar size="56px" color="deep-purple-9" text-color="white" class="shadow-4 text-h5 q-mb-sm pulse-glow">
+            {{ authStore.userAvatar || '💻' }}
+          </q-avatar>
+          <div class="text-subtitle1 text-weight-bold font-outfit text-white">{{ authStore.fullDisplayName }}</div>
+          <div class="text-caption text-accent text-weight-medium font-outfit text-truncate q-px-sm" style="max-width: 240px;">
+            {{ authStore.jobTitle }}
+          </div>
           <div class="text-caption text-grey-5 text-truncate q-px-sm" style="max-width: 240px;">
-            {{ authStore.isAuthenticated ? authStore.userEmail : 'Estudante de Inglês' }}
+            {{ authStore.isAuthenticated ? authStore.userEmail : 'Modo Estudante Local' }}
           </div>
         </div>
         <q-separator dark class="full-width q-my-sm" />

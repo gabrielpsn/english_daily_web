@@ -128,4 +128,30 @@ describe('study.js - Store de Estudos e Algoritmo SRS (Leitner)', () => {
     store.toggleFavoriteTerm('race condition')
     expect(store.isFavoriteTerm('Race Condition')).toBe(false)
   })
+
+  it('deve redefinir completamente todos os dados para estaca zero com resetAllData', async () => {
+    const store = useStudyStore()
+    store.completeLesson(1, true)
+    store.completeLesson(2, true)
+    store.saveNote(1, 'Nota técnica')
+    store.recordFlashcardReview('Kubernetes', 'easy')
+    store.recordShadowingPractice(1)
+    store.recordScrumSimulation()
+    store.toggleFavoriteTerm('Microservices')
+
+    expect(store.completedLessons.length).toBeGreaterThan(0)
+    expect(store.totalMinutes).toBeGreaterThan(0)
+
+    await store.resetAllData()
+
+    expect(store.completedLessons).toEqual([])
+    expect(store.notes).toEqual({})
+    expect(store.studyDates).toEqual([])
+    expect(store.streak).toBe(0)
+    expect(store.totalMinutes).toBe(0)
+    expect(store.flashcards).toEqual({})
+    expect(store.shadowingSessions).toEqual({})
+    expect(store.scrumSessionsCount).toBe(0)
+    expect(store.favoriteTerms).toEqual([])
+  })
 })

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import supabaseService from '../services/supabase'
+import storageService from '../services/storage'
 import { useStudyStore } from './study'
 import { useSettingsStore } from './settings'
 import { useAchievementsStore } from './achievements'
@@ -9,7 +10,13 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
     loading: false,
-    syncing: false
+    syncing: false,
+    localProfile: {
+      fullName: 'Gabriel',
+      jobTitle: 'Desenvolvedor Full-Stack',
+      targetLevel: 'Fluência Prática (C1)',
+      avatar: '💻'
+    }
   }),
 
   getters: {
@@ -17,9 +24,20 @@ export const useAuthStore = defineStore('auth', {
     userId: (state) => state.user?.id || null,
     userEmail: (state) => state.user?.email || '',
     displayName: (state) => {
-      if (!state.user) return 'Visitante'
-      const fullName = state.user?.user_metadata?.full_name || state.user?.email?.split('@')[0] || 'Visitante'
-      return fullName.trim().split(' ')[0]
+      const name = state.user?.user_metadata?.full_name || state.localProfile?.fullName || state.user?.email?.split('@')[0] || 'Visitante'
+      return name.trim().split(' ')[0]
+    },
+    fullDisplayName: (state) => {
+      return state.user?.user_metadata?.full_name || state.localProfile?.fullName || state.user?.email?.split('@')[0] || 'Visitante'
+    },
+    jobTitle: (state) => {
+      return state.user?.user_metadata?.job_title || state.localProfile?.jobTitle || 'Desenvolvedor Full-Stack'
+    },
+    targetLevel: (state) => {
+      return state.user?.user_metadata?.target_level || state.localProfile?.targetLevel || 'Fluência Prática (C1)'
+    },
+    userAvatar: (state) => {
+      return state.user?.user_metadata?.avatar || state.localProfile?.avatar || '💻'
     }
   },
 
@@ -28,6 +46,8 @@ export const useAuthStore = defineStore('auth', {
      * Inicializa a escuta de autenticação do Supabase
      */
     initAuth() {
+      this.loadLocalProfile()
+
       if (!supabaseService.isEnabled()) return
 
       this.loading = true
@@ -188,6 +208,100 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
+     * Carrega o perfil do usuário salvo localmente
+     */
+    loadLocalProfile() {
+      const saved = storageService.load()
+      if (saved && saved.userProfile) {
+        this.localProfile = { ...this.localProfile, ...saved.userProfile }
+      }
+    },
+
+    /**
+     * Atualiza os dados do perfil do usuário
+     * @param {Object} profileData - { fullName, jobTitle, targetLevel, avatar }
+     */
+    async updateProfile({ fullName, jobTitle, targetLevel, avatar }) {
+      this.loading = true
+      try {
+        this.localProfile = {
+          fullName: fullName !== undefined ? fullName : this.localProfile.fullName,
+          jobTitle: jobTitle !== undefined ? jobTitle : this.localProfile.jobTitle,
+          targetLevel: targetLevel !== undefined ? targetLevel : this.localProfile.targetLevel,
+          avatar: avatar !== undefined ? avatar : this.localProfile.avatar
+        }
+
+        // Salva no LocalStorage
+        const saved = storageService.load() || {}
+        saved.userProfile = this.localProfile
+        storageService.save(saved)
+
+        // Se autenticado no Supabase, atualiza os metadados do usuário na nuvem
+        if (this.isAuthenticated) {
+          const updatedUser = await supabaseService.updateUserProfile({
+            full_name: this.localProfile.fullName,
+            job_title: this.localProfile.jobTitle,
+            target_level: this.localProfile.targetLevel,
+            avatar: this.localProfile.avatar
+          })
+          if (updatedUser) {
+            this.user = updatedUser
+          }
+        }
+
+        Notify.create({
+          message: 'Perfil atualizado com sucesso!',
+          color: 'positive',
+          icon: 'check_circle',
+          position: 'top-right'
+        })
+        return true
+      } catch (err) {
+        console.error('Erro ao atualizar perfil:', err)
+        Notify.create({
+          message: 'Erro ao atualizar perfil',
+          caption: err.message,
+          color: 'negative',
+          icon: 'warning',
+          position: 'top-right'
+        })
+        return false
+      } finally {
+        this.loading = false
+      }
+    },
+
+    /**
+     * Atualiza a senha do usuário
+     * @param {string} newPassword
+     */
+    async changePassword(newPassword) {
+      if (!this.isAuthenticated) return false
+      this.loading = true
+      try {
+        await supabaseService.updatePassword(newPassword)
+        Notify.create({
+          message: 'Senha alterada com sucesso!',
+          color: 'positive',
+          icon: 'lock_reset',
+          position: 'top-right'
+        })
+        return true
+      } catch (err) {
+        Notify.create({
+          message: 'Erro ao alterar senha',
+          caption: err.message,
+          color: 'negative',
+          icon: 'warning',
+          position: 'top-right'
+        })
+        return false
+      } finally {
+        this.loading = false
+      }
+    },
+
+    /**
      * Sincroniza dados da nuvem para o app local
      */
     async syncFromCloud() {
@@ -238,8 +352,8 @@ export const useAuthStore = defineStore('auth', {
 
         // 4. Carrega Conquistas
         const achievementsData = await supabaseService.loadAchievements(this.userId)
-        if (achievementsData.length > 0) {
-          achievementsStore.resetAchievements()
+        achievementsStore.resetAchievements()
+        if (achievementsData && achievementsData.length > 0) {
           achievementsData.forEach(savedAch => {
             const ach = achievementsStore.achievementsList.find(a => a.id === savedAch.achievement_id)
             if (ach) {

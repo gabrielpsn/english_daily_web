@@ -346,9 +346,9 @@ export const useStudyStore = defineStore('study', {
     },
 
     /**
-     * Limpa todo o estado do Pinia e LocalStorage
+     * Limpa todo o estado do Pinia, LocalStorage e Supabase (Estaca Zero)
      */
-    resetAllData() {
+    async resetAllData() {
       this.completedLessons = []
       this.notes = {}
       this.studyDates = []
@@ -360,6 +360,16 @@ export const useStudyStore = defineStore('study', {
       this.favoriteTerms = []
       
       storageService.reset()
+
+      // Se autenticado na nuvem, zera todas as tabelas no Supabase para garantir estaca zero
+      const authStore = useAuthStore()
+      if (authStore.isAuthenticated && authStore.userId) {
+        try {
+          await supabaseService.resetAllUserData(authStore.userId)
+        } catch (err) {
+          console.error('Erro ao resetar dados na nuvem:', err)
+        }
+      }
     }
   }
 })
