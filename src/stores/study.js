@@ -11,10 +11,18 @@ export const useStudyStore = defineStore('study', {
     studyDates: [],      // Array de datas com estudo real (formato 'YYYY-MM-DD')
     streak: 0,           // Quantidade de dias seguidos estudando
     totalMinutes: 0,     // Tempo total estudado em minutos acumulados
-    flashcards: {}       // Progresso Leitner SRS: { [word]: { box, interval, nextReview, reviews } }
+    flashcards: {},      // Progresso Leitner SRS: { [word]: { box, interval, nextReview, reviews } }
+    shadowingSessions: {} // Sessões de shadowing por dia: { [day]: count }
   }),
 
   getters: {
+    /**
+     * Retorna a quantidade total de sessões de shadowing realizadas
+     */
+    totalShadowingSessions: (state) => {
+      return Object.values(state.shadowingSessions || {}).reduce((sum, n) => sum + n, 0)
+    },
+
     /**
      * Retorna a quantidade total de aulas concluídas
      */
@@ -79,6 +87,7 @@ export const useStudyStore = defineStore('study', {
         if (saved.streak) this.streak = saved.streak
         if (saved.totalMinutes) this.totalMinutes = saved.totalMinutes
         if (saved.flashcards) this.flashcards = saved.flashcards
+        if (saved.shadowingSessions) this.shadowingSessions = saved.shadowingSessions
       }
       this.recalculateActiveStreak()
     },
@@ -94,6 +103,7 @@ export const useStudyStore = defineStore('study', {
       saved.streak = this.streak
       saved.totalMinutes = this.totalMinutes
       saved.flashcards = this.flashcards
+      saved.shadowingSessions = this.shadowingSessions
       storageService.save(saved)
 
       // Sincroniza diretamente com o Supabase se logado
@@ -279,6 +289,22 @@ export const useStudyStore = defineStore('study', {
     },
 
     /**
+     * Registra uma sessão de prática de Shadowing realizada pelo usuário
+     * @param {number|string} day - Dia da lição praticada
+     */
+    recordShadowingPractice(day) {
+      if (!day) return
+      const key = day.toString()
+      if (!this.shadowingSessions) {
+        this.shadowingSessions = {}
+      }
+      this.shadowingSessions[key] = (this.shadowingSessions[key] || 0) + 1
+
+      this.registerStudyDate()
+      this.saveStudyData()
+    },
+
+    /**
      * Limpa todo o estado do Pinia e LocalStorage
      */
     resetAllData() {
@@ -288,6 +314,7 @@ export const useStudyStore = defineStore('study', {
       this.streak = 0
       this.totalMinutes = 0
       this.flashcards = {}
+      this.shadowingSessions = {}
       
       storageService.reset()
     }

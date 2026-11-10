@@ -41,6 +41,7 @@
       >
         <q-tab name="vocabulary" icon="translate" label="Vocabulário" />
         <q-tab name="practice" icon="hearing" label="Prática de Pronúncia" />
+        <q-tab name="shadowing" icon="record_voice_over" label="Modo Shadowing" />
         <q-tab name="notes" icon="edit_note" label="Minhas Anotações" />
       </q-tabs>
 
@@ -188,7 +189,17 @@
           </div>
         </q-tab-panel>
 
-        <!-- Aba 3: Anotações -->
+        <!-- Aba 3: Modo Shadowing & Gravação Comparativa -->
+        <q-tab-panel name="shadowing" class="q-pa-lg">
+          <ShadowingStudio
+            :lesson="lesson"
+            :accent="settingsStore.accent"
+            :speed="settingsStore.speed"
+            :speech-enabled="settingsStore.speechEnabled"
+          />
+        </q-tab-panel>
+
+        <!-- Aba 4: Anotações -->
         <q-tab-panel name="notes" class="q-pa-lg">
           <div class="flex items-center justify-between q-mb-md">
             <div>
@@ -231,6 +242,7 @@ import { useAchievementsStore } from '../stores/achievements'
 import lessonsData from '../data/lessonsData'
 import speechService from '../services/speech'
 import PronunciationPracticeCard from '../components/PronunciationPracticeCard.vue'
+import ShadowingStudio from '../components/ShadowingStudio.vue'
 import { Notify } from 'quasar'
 import confetti from 'canvas-confetti'
 

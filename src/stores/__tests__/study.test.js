@@ -92,4 +92,17 @@ describe('study.js - Store de Estudos e Algoritmo SRS (Leitner)', () => {
     expect(newStore.flashcards['refactoring']).toBeDefined()
     expect(newStore.flashcards['refactoring'].box).toBe(3)
   })
+
+  it('deve registrar e acumular sessões de shadowing por lição', () => {
+    const store = useStudyStore()
+    expect(store.totalShadowingSessions).toBe(0)
+
+    store.recordShadowingPractice(1)
+    store.recordShadowingPractice(1)
+    store.recordShadowingPractice(2)
+
+    expect(store.shadowingSessions['1']).toBe(2)
+    expect(store.shadowingSessions['2']).toBe(1)
+    expect(store.totalShadowingSessions).toBe(3)
+  })
 })
