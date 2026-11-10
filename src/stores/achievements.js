@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { Notify } from 'quasar'
 import storageService from '../services/storage'
+import { supabaseService } from '../services/supabase'
+import { useAuthStore } from './auth'
 
 export const useAchievementsStore = defineStore('achievements', {
   state: () => ({
@@ -149,17 +151,13 @@ export const useAchievementsStore = defineStore('achievements', {
       saved.achievements = unlocked
       storageService.save(saved)
 
-      // Sincroniza assincronamente com o Supabase se logado (evitando importação circular)
-      import('./auth').then(({ useAuthStore }) => {
-        const authStore = useAuthStore()
-        if (authStore.isAuthenticated) {
-          import('../services/supabase').then(({ supabaseService }) => {
-            supabaseService.saveAchievements(authStore.userId, unlocked).catch(err => {
-              console.error('Erro ao sincronizar conquistas na nuvem:', err)
-            })
-          })
-        }
-      })
+      // Sincroniza com o Supabase se logado
+      const authStore = useAuthStore()
+      if (authStore.isAuthenticated) {
+        supabaseService.saveAchievements(authStore.userId, unlocked).catch(err => {
+          console.error('Erro ao sincronizar conquistas na nuvem:', err)
+        })
+      }
     },
 
     /**

@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { Dark } from 'quasar'
 import storageService from '../services/storage'
+import { supabaseService } from '../services/supabase'
+import { useAuthStore } from './auth'
 
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
@@ -61,17 +63,13 @@ export const useSettingsStore = defineStore('settings', {
       }
       storageService.save(saved)
 
-      // Sincroniza assincronamente com o Supabase se logado (evitando importação circular)
-      import('./auth').then(({ useAuthStore }) => {
-        const authStore = useAuthStore()
-        if (authStore.isAuthenticated) {
-          import('../services/supabase').then(({ supabaseService }) => {
-            supabaseService.saveSettings(authStore.userId, this).catch(err => {
-              console.error('Erro ao sincronizar configurações na nuvem:', err)
-            })
-          })
-        }
-      })
+      // Sincroniza com o Supabase se logado
+      const authStore = useAuthStore()
+      if (authStore.isAuthenticated) {
+        supabaseService.saveSettings(authStore.userId, this).catch(err => {
+          console.error('Erro ao sincronizar configurações na nuvem:', err)
+        })
+      }
     }
   }
 })

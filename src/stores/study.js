@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import storageService from '../services/storage'
+import { supabaseService } from '../services/supabase'
+import { useAuthStore } from './auth'
 import lessonsData from '../data/lessonsData'
 
 export const useStudyStore = defineStore('study', {
@@ -8,7 +10,8 @@ export const useStudyStore = defineStore('study', {
     notes: {},           // Dicionário de anotações { "1": "anotação da aula 1" }
     studyDates: [],      // Array de datas com estudo real (formato 'YYYY-MM-DD')
     streak: 0,           // Quantidade de dias seguidos estudando
-    totalMinutes: 0      // Tempo total estudado em minutos acumulados
+    totalMinutes: 0,     // Tempo total estudado em minutos acumulados
+    flashcards: {}       // Progresso Leitner SRS: { [word]: { box, interval, nextReview, reviews } }
   }),
 
   getters: {
@@ -75,6 +78,7 @@ export const useStudyStore = defineStore('study', {
         if (saved.studyDates) this.studyDates = saved.studyDates
         if (saved.streak) this.streak = saved.streak
         if (saved.totalMinutes) this.totalMinutes = saved.totalMinutes
+        if (saved.flashcards) this.flashcards = saved.flashcards
       }
       this.recalculateActiveStreak()
     },
@@ -89,24 +93,21 @@ export const useStudyStore = defineStore('study', {
       saved.studyDates = this.studyDates
       saved.streak = this.streak
       saved.totalMinutes = this.totalMinutes
+      saved.flashcards = this.flashcards
       storageService.save(saved)
 
-      // Sincroniza assincronamente com o Supabase se logado (evita importação circular)
-      import('./auth').then(({ useAuthStore }) => {
-        const authStore = useAuthStore()
-        if (authStore.isAuthenticated) {
-          import('../services/supabase').then(({ supabaseService }) => {
-            supabaseService.saveProgress(authStore.userId, {
-              completedLessons: this.completedLessons,
-              studyDates: this.studyDates,
-              streak: this.streak,
-              totalMinutes: this.totalMinutes
-            }).catch(err => {
-              console.error('Erro ao sincronizar progresso na nuvem:', err)
-            })
-          })
-        }
-      })
+      // Sincroniza diretamente com o Supabase se logado
+      const authStore = useAuthStore()
+      if (authStore.isAuthenticated) {
+        supabaseService.saveProgress(authStore.userId, {
+          completedLessons: this.completedLessons,
+          studyDates: this.studyDates,
+          streak: this.streak,
+          totalMinutes: this.totalMinutes
+        }).catch(err => {
+          console.error('Erro ao sincronizar progresso na nuvem:', err)
+        })
+      }
     },
 
     /**
@@ -145,16 +146,12 @@ export const useStudyStore = defineStore('study', {
       this.saveStudyData()
 
       // Sincroniza anotação específica com o Supabase se logado
-      import('./auth').then(({ useAuthStore }) => {
-        const authStore = useAuthStore()
-        if (authStore.isAuthenticated) {
-          import('../services/supabase').then(({ supabaseService }) => {
-            supabaseService.saveNote(authStore.userId, day, text).catch(err => {
-              console.error(`Erro ao sincronizar anotação do dia ${day} no Supabase:`, err)
-            })
-          })
-        }
-      })
+      const authStore = useAuthStore()
+      if (authStore.isAuthenticated) {
+        supabaseService.saveNote(authStore.userId, day, text).catch(err => {
+          console.error(`Erro ao sincronizar anotação do dia ${day} no Supabase:`, err)
+        })
+      }
     },
 
     /**
@@ -241,6 +238,47 @@ export const useStudyStore = defineStore('study', {
     },
 
     /**
+     * Atualiza o progresso do flashcard no algoritmo Leitner / Repetição Espaçada (SRS)
+     * @param {string} word - Palavra avaliada
+     * @param {'hard' | 'good' | 'easy'} rating - Nível de dificuldade indicado pelo usuário
+     */
+    recordFlashcardReview(word, rating) {
+      if (!word) return
+      const key = word.toLowerCase().trim()
+      const current = this.flashcards[key] || { box: 1, interval: 1, reviews: 0 }
+
+      let nextBox = current.box || 1
+      let nextInterval = 1
+
+      if (rating === 'hard') {
+        nextBox = 1
+        nextInterval = 1 // Rever amanhã
+      } else if (rating === 'good') {
+        nextBox = Math.min(5, nextBox + 1)
+        nextInterval = nextBox === 2 ? 3 : nextBox === 3 ? 5 : nextBox === 4 ? 10 : 21
+      } else if (rating === 'easy') {
+        nextBox = Math.min(5, nextBox + 2)
+        nextInterval = nextBox === 3 ? 7 : nextBox === 4 ? 14 : 30
+      }
+
+      const today = new Date()
+      const nextDate = new Date(today)
+      nextDate.setDate(today.getDate() + nextInterval)
+      const nextReviewStr = nextDate.toLocaleDateString('sv')
+
+      this.flashcards[key] = {
+        box: nextBox,
+        interval: nextInterval,
+        nextReview: nextReviewStr,
+        reviews: (current.reviews || 0) + 1,
+        lastReviewed: today.toLocaleDateString('sv')
+      }
+
+      this.registerStudyDate()
+      this.saveStudyData()
+    },
+
+    /**
      * Limpa todo o estado do Pinia e LocalStorage
      */
     resetAllData() {
@@ -249,6 +287,7 @@ export const useStudyStore = defineStore('study', {
       this.studyDates = []
       this.streak = 0
       this.totalMinutes = 0
+      this.flashcards = {}
       
       storageService.reset()
     }

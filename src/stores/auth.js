@@ -93,12 +93,10 @@ export const useAuthStore = defineStore('auth', {
             position: 'top-right'
           })
 
-          // Redireciona dinamicamente para a tela de login (evitando importação circular)
-          import('../router').then(({ default: router }) => {
-            if (router.currentRoute.value.name !== 'login') {
-              router.push({ name: 'login' })
-            }
-          })
+          // Redireciona para a tela de login
+          if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+            window.location.href = '/login'
+          }
         }
       })
     },
