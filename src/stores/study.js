@@ -13,10 +13,19 @@ export const useStudyStore = defineStore('study', {
     totalMinutes: 0,     // Tempo total estudado em minutos acumulados
     flashcards: {},      // Progresso Leitner SRS: { [word]: { box, interval, nextReview, reviews } }
     shadowingSessions: {}, // Sessões de shadowing por dia: { [day]: count }
-    scrumSessionsCount: 0 // Quantidade de simulações de Daily Scrum concluídas
+    scrumSessionsCount: 0, // Quantidade de simulações de Daily Scrum concluídas
+    favoriteTerms: []     // Termos técnicos favoritados pelo usuário
   }),
 
   getters: {
+    /**
+     * Verifica se um termo do dicionário está favoritado
+     */
+    isFavoriteTerm: (state) => (word) => {
+      if (!word || !state.favoriteTerms) return false
+      return state.favoriteTerms.includes(word.toLowerCase().trim())
+    },
+
     /**
      * Retorna a quantidade total de sessões de shadowing realizadas
      */
@@ -90,6 +99,7 @@ export const useStudyStore = defineStore('study', {
         if (saved.flashcards) this.flashcards = saved.flashcards
         if (saved.shadowingSessions) this.shadowingSessions = saved.shadowingSessions
         if (typeof saved.scrumSessionsCount === 'number') this.scrumSessionsCount = saved.scrumSessionsCount
+        if (Array.isArray(saved.favoriteTerms)) this.favoriteTerms = saved.favoriteTerms
       }
       this.recalculateActiveStreak()
     },
@@ -107,6 +117,7 @@ export const useStudyStore = defineStore('study', {
       saved.flashcards = this.flashcards
       saved.shadowingSessions = this.shadowingSessions
       saved.scrumSessionsCount = this.scrumSessionsCount
+      saved.favoriteTerms = this.favoriteTerms
       storageService.save(saved)
 
       // Sincroniza diretamente com o Supabase se logado
@@ -318,6 +329,23 @@ export const useStudyStore = defineStore('study', {
     },
 
     /**
+     * Alterna o status de favorito de um termo técnico do dicionário
+     * @param {string} word - Palavra a favoritar/desfavoritar
+     */
+    toggleFavoriteTerm(word) {
+      if (!word) return
+      const key = word.toLowerCase().trim()
+      if (!this.favoriteTerms) this.favoriteTerms = []
+      const idx = this.favoriteTerms.indexOf(key)
+      if (idx > -1) {
+        this.favoriteTerms.splice(idx, 1)
+      } else {
+        this.favoriteTerms.push(key)
+      }
+      this.saveStudyData()
+    },
+
+    /**
      * Limpa todo o estado do Pinia e LocalStorage
      */
     resetAllData() {
@@ -329,6 +357,7 @@ export const useStudyStore = defineStore('study', {
       this.flashcards = {}
       this.shadowingSessions = {}
       this.scrumSessionsCount = 0
+      this.favoriteTerms = []
       
       storageService.reset()
     }

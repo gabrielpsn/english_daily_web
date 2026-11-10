@@ -44,6 +44,11 @@ const routes = [
         component: () => import('../pages/DailySimulatorPage.vue')
       },
       {
+        path: 'dictionary',
+        name: 'dictionary',
+        component: () => import('../pages/DictionaryPage.vue')
+      },
+      {
         path: 'settings',
         name: 'settings',
         component: () => import('../pages/SettingsPage.vue')

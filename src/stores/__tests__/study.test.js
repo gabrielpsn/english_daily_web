@@ -115,4 +115,17 @@ describe('study.js - Store de Estudos e Algoritmo SRS (Leitner)', () => {
     expect(store.scrumSessionsCount).toBe(1)
     expect(store.totalMinutes).toBe(initialMinutes + 5)
   })
+
+  it('deve favoritar e desfavoritar termos técnicos do dicionário', () => {
+    const store = useStudyStore()
+    expect(store.favoriteTerms).toEqual([])
+    expect(store.isFavoriteTerm('Race Condition')).toBe(false)
+
+    store.toggleFavoriteTerm('Race Condition')
+    expect(store.isFavoriteTerm('race condition')).toBe(true)
+    expect(store.favoriteTerms).toContain('race condition')
+
+    store.toggleFavoriteTerm('race condition')
+    expect(store.isFavoriteTerm('Race Condition')).toBe(false)
+  })
 })

@@ -21,7 +21,19 @@
         </q-toolbar-title>
 
         <!-- Stats rápidos no Header -->
-        <div class="flex items-center q-gutter-x-md">
+        <div class="flex items-center q-gutter-x-sm">
+          <!-- Botão Dicionário Rápido no Header -->
+          <q-btn
+            flat
+            round
+            dense
+            color="accent"
+            icon="auto_stories"
+            :to="{ name: 'dictionary' }"
+          >
+            <q-tooltip class="bg-grey-9 text-caption font-outfit">Dicionário Dev (270 Termos)</q-tooltip>
+          </q-btn>
+
           <!-- Streak 🔥 -->
           <q-badge
             color="orange-10"
@@ -144,6 +156,7 @@ const activeTab = ref('dashboard')
 const drawerMenuItems = [
   { label: 'Painel Geral', icon: 'dashboard', route: 'dashboard' },
   { label: 'Aulas diárias', icon: 'menu_book', route: 'lessons' },
+  { label: 'Dicionário Dev (270)', icon: 'auto_stories', route: 'dictionary' },
   { label: 'Daily Scrum Simulator', icon: 'groups', route: 'daily-simulator' },
   { label: 'Minha Evolução', icon: 'bar_chart', route: 'statistics' },
   { label: 'Minhas Conquistas', icon: 'military_tech', route: 'achievements' },
