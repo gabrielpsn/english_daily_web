@@ -17,13 +17,24 @@
         </div>
       </div>
       
-      <!-- Botão Concluir Aula no Topo -->
-      <div class="col-12 col-sm-4 flex justify-end">
+      <!-- Botão Concluir Aula & Modo Mãos-Livres no Topo -->
+      <div class="col-12 col-sm-4 flex justify-end q-gutter-x-sm">
+        <q-btn
+          outline
+          color="accent"
+          icon="headphones"
+          label="Mãos-Livres"
+          class="font-outfit text-weight-bold q-py-sm q-px-md rounded-borders"
+          @click="handsFreeOpen = true"
+        >
+          <q-tooltip class="bg-grey-9 text-caption">Modo Áudio Contínuo (Hands-Free Walk & Listen)</q-tooltip>
+        </q-btn>
+
         <q-btn
           unelevated
           :color="isCompleted ? 'positive' : 'accent'"
           :icon="isCompleted ? 'check_circle' : 'check'"
-          :label="isCompleted ? 'Aula Concluída!' : 'Concluir Aula'"
+          :label="isCompleted ? 'Concluída!' : 'Concluir Aula'"
           class="font-outfit text-weight-bold pulse-glow q-py-sm q-px-lg rounded-borders"
           @click="toggleCompletion"
         />
@@ -230,6 +241,13 @@
         </q-tab-panel>
       </q-tab-panels>
     </div>
+
+    <!-- Modal do Player Modo Mãos-Livres (Hands-Free Walk & Listen) -->
+    <HandsFreePlayer
+      v-if="lesson"
+      v-model="handsFreeOpen"
+      :lesson="lesson"
+    />
   </div>
 </template>
 
@@ -243,6 +261,7 @@ import lessonsData from '../data/lessonsData'
 import speechService from '../services/speech'
 import PronunciationPracticeCard from '../components/PronunciationPracticeCard.vue'
 import ShadowingStudio from '../components/ShadowingStudio.vue'
+import HandsFreePlayer from '../components/HandsFreePlayer.vue'
 import { Notify } from 'quasar'
 import confetti from 'canvas-confetti'
 
@@ -254,6 +273,7 @@ const achievementsStore = useAchievementsStore()
 const lesson = ref(null)
 const activeTab = ref('vocabulary')
 const flippedVocab = ref({})
+const handsFreeOpen = ref(false)
 
 // Anotações
 const notesContent = ref('')

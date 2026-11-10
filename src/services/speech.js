@@ -51,7 +51,9 @@ export const speechService = {
     const accentLangMap = {
       'US': 'en-US',
       'UK': 'en-GB',
-      'AU': 'en-AU'
+      'AU': 'en-AU',
+      'PT': 'pt-BR',
+      'BR': 'pt-BR'
     }
 
     const targetLang = accentLangMap[accentCode] || 'en-US'
@@ -90,9 +92,11 @@ export const speechService = {
       const accentLangMap = {
         'US': 'en-US',
         'UK': 'en-GB',
-        'AU': 'en-AU'
+        'AU': 'en-AU',
+        'PT': 'pt-BR',
+        'BR': 'pt-BR'
       }
-      utterance.lang = accentLangMap[accentCode] || 'en-US'
+      utterance.lang = accentLangMap[accentCode] || (accentCode.includes('-') ? accentCode : 'en-US')
       utterance.rate = rate
       utterance.pitch = 1.0
 
@@ -110,6 +114,16 @@ export const speechService = {
     if (hasSpeechSynthesis) {
       window.speechSynthesis.cancel()
     }
+  },
+
+  /**
+   * Pronuncia um texto em Português (pt-BR)
+   * @param {string} text - Texto em português
+   * @param {number} rate - Velocidade
+   * @returns {Promise}
+   */
+  speakPortuguese(text, rate = 1.0) {
+    return this.speak(text, 'PT', rate)
   },
 
   // --- RECONHECIMENTO DE VOZ (SPEECH-TO-TEXT) ---
