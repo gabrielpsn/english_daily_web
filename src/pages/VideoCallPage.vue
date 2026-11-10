@@ -124,240 +124,243 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- ESTADO 1: TELA DE CHAMADA RECEBIDA (RINGING WHATSAPP)     -->
+    <!-- ESTADOS EM CHAMADA: TELEPORTADOS PARA BODY                -->
+    <!-- Garante Fullscreen 100% livre de transforms e acima       -->
+    <!-- do footer de navegação mobile                             -->
     <!-- ========================================================= -->
-    <div v-else-if="callState === 'RINGING'" class="whatsapp-fullscreen-ringing flex flex-column justify-between q-pa-xl text-center">
-      <div class="q-mt-xl">
-        <div class="text-caption text-grey-4 font-outfit uppercase tracking-widest q-mb-xs flex items-center justify-center">
-          <q-icon name="lock" size="14px" class="q-mr-xs text-positive" />
-          <span>WhatsApp Video Call • End-to-end encrypted</span>
+    <teleport to="body">
+      <!-- ESTADO 1: TELA DE CHAMADA RECEBIDA (RINGING WHATSAPP)     -->
+      <div v-if="callState === 'RINGING'" class="whatsapp-fullscreen-ringing flex flex-column justify-between text-center">
+        <div class="q-mt-md">
+          <div class="text-caption text-grey-4 font-outfit uppercase tracking-widest q-mb-xs flex items-center justify-center">
+            <q-icon name="lock" size="14px" class="q-mr-xs text-positive" />
+            <span>WhatsApp Video Call • End-to-end encrypted</span>
+          </div>
+          <div class="text-h4 text-weight-bold font-outfit text-white q-my-sm">
+            {{ selectedPersona.name }}
+          </div>
+          <div class="text-subtitle1 text-positive font-outfit text-weight-medium">
+            Chamada de vídeo recebida...
+          </div>
         </div>
-        <div class="text-h3 text-weight-bold font-outfit text-white q-my-sm">
-          {{ selectedPersona.name }}
+
+        <!-- Avatar com Ondas Pulsantes -->
+        <div class="flex flex-center q-my-lg">
+          <div class="avatar-ripple-container">
+            <div class="ripple ripple-1"></div>
+            <div class="ripple ripple-2"></div>
+            <div class="ripple ripple-3"></div>
+            <q-avatar size="130px" class="shadow-10 relative-position">
+              <img :src="selectedPersona.avatar" :alt="selectedPersona.name" />
+            </q-avatar>
+          </div>
         </div>
-        <div class="text-subtitle1 text-positive font-outfit text-weight-medium">
-          Chamada de vídeo recebida...
+
+        <!-- Botões de Atender / Recusar -->
+        <div class="q-mb-lg flex items-center justify-center q-gutter-x-xl">
+          <!-- Recusar -->
+          <div class="text-center">
+            <q-btn
+              round
+              unelevated
+              size="lg"
+              color="negative"
+              icon="call_end"
+              class="shadow-6 q-mb-xs"
+              @click="declineCall"
+            />
+            <div class="text-caption text-grey-4 font-outfit">Recusar</div>
+          </div>
+
+          <!-- Atender -->
+          <div class="text-center">
+            <q-btn
+              round
+              unelevated
+              size="xl"
+              color="positive"
+              text-color="dark"
+              icon="videocam"
+              class="shadow-6 pulse-glow q-mb-xs"
+              @click="answerCall"
+            />
+            <div class="text-caption text-white text-weight-bold font-outfit">Atender</div>
+          </div>
         </div>
       </div>
 
-      <!-- Avatar com Ondas Pulsantes -->
-      <div class="flex flex-center q-my-xl">
-        <div class="avatar-ripple-container">
-          <div class="ripple ripple-1"></div>
-          <div class="ripple ripple-2"></div>
-          <div class="ripple ripple-3"></div>
-          <q-avatar size="140px" class="shadow-10 relative-position">
-            <img :src="selectedPersona.avatar" :alt="selectedPersona.name" />
-          </q-avatar>
-        </div>
-      </div>
+      <!-- ESTADO 2: CHAMADA DE VÍDEO ATIVA (WHATSAPP VIDEO CALL)   -->
+      <div v-else-if="callState === 'CONNECTED'" class="whatsapp-call-active flex flex-column justify-between relative-position">
+        <!-- Barra Superior da Chamada (Estilo WhatsApp) -->
+        <div class="call-top-bar q-px-md q-py-sm flex items-center justify-between z-top">
+          <div class="flex items-center q-gutter-x-sm">
+            <q-avatar size="36px">
+              <img :src="selectedPersona.avatar" :alt="selectedPersona.name" />
+            </q-avatar>
+            <div>
+              <div class="text-subtitle2 text-weight-bold font-outfit text-white line-height-tight">
+                {{ selectedPersona.name }}
+              </div>
+              <div class="text-caption text-positive font-mono text-weight-bold">
+                {{ formatSeconds(callSeconds) }}
+              </div>
+            </div>
+          </div>
 
-      <!-- Botões de Atender / Recusar -->
-      <div class="q-mb-xl flex items-center justify-center q-gutter-x-xl">
-        <!-- Recusar -->
-        <div class="text-center">
+          <!-- Botões de Controle Superior (Legendas & Dicas) -->
+          <div class="flex items-center q-gutter-x-xs">
+            <!-- Toggle Legendas / Closed Captions -->
+            <q-btn
+              round
+              flat
+              dense
+              size="sm"
+              :color="showSubtitles ? 'positive' : 'grey-5'"
+              :icon="showSubtitles ? 'subtitles' : 'subtitles_off'"
+              @click="showSubtitles = !showSubtitles"
+            >
+              <q-tooltip class="bg-grey-9 text-caption">
+                {{ showSubtitles ? 'Ocultar legendas' : 'Mostrar legendas em inglês' }}
+              </q-tooltip>
+            </q-btn>
+
+            <!-- Botão Dicas de Resposta (Se Travar) -->
+            <q-btn
+              round
+              flat
+              dense
+              size="sm"
+              color="amber-9"
+              icon="lightbulb"
+              @click="showHintsModal = true"
+            >
+              <q-tooltip class="bg-grey-9 text-caption">Ideias do que falar (Dicas)</q-tooltip>
+            </q-btn>
+          </div>
+        </div>
+
+        <!-- Centro: Vídeo / Avatar da Pessoa Remota -->
+        <div class="remote-video-container col flex flex-center relative-position">
+          <div class="text-center relative-position">
+            <div class="avatar-remote-halo" :class="{ 'speaking-active': isAiSpeaking }">
+              <q-avatar size="140px" class="shadow-10">
+                <img :src="selectedPersona.avatar" :alt="selectedPersona.name" />
+              </q-avatar>
+            </div>
+
+            <!-- Indicador de Status da IA (Falando / Ouvindo) -->
+            <div class="q-mt-sm">
+              <q-badge
+                v-if="isAiSpeaking"
+                color="positive"
+                text-color="dark"
+                class="font-outfit text-weight-bold q-py-xs q-px-md rounded-borders animate-pulse"
+              >
+                <q-icon name="volume_up" size="14px" class="q-mr-xs" />
+                <span>{{ selectedPersona.name }} está falando...</span>
+              </q-badge>
+              <q-badge
+                v-else-if="isUserListening"
+                color="amber-9"
+                text-color="dark"
+                class="font-outfit text-weight-bold q-py-xs q-px-md rounded-borders animate-pulse"
+              >
+                <q-icon name="mic" size="14px" class="q-mr-xs" />
+                <span>Ouvindo sua voz... Fale agora!</span>
+              </q-badge>
+              <q-badge
+                v-else
+                color="grey-9"
+                text-color="grey-4"
+                class="font-outfit q-py-xs q-px-sm rounded-borders"
+              >
+                <span>Conectado</span>
+              </q-badge>
+            </div>
+          </div>
+
+          <!-- Janela PiP da Câmera do Usuário (Canto Superior Direito, posicionada abaixo da top-bar) -->
+          <div class="local-camera-pip shadow-8">
+            <video
+              ref="localVideoRef"
+              autoplay
+              playsinline
+              muted
+              class="local-video-element"
+              :class="{ 'video-disabled': !isCameraOn }"
+            ></video>
+            <div v-if="!isCameraOn" class="camera-off-placeholder flex flex-center">
+              <q-avatar size="36px" color="deep-purple-9" text-color="white" class="shadow-4 text-weight-bold font-outfit">
+                {{ authStore.userAvatar || '💻' }}
+              </q-avatar>
+            </div>
+            <div class="pip-label">{{ authStore.displayName || 'Você' }}</div>
+          </div>
+        </div>
+
+        <!-- Legendas em Tempo Real (Subtitles Overlay) -->
+        <div v-if="showSubtitles && latestSubtitle" class="subtitles-overlay text-center animate-fade-in">
+          <div class="subtitles-bubble q-pa-sm rounded-borders text-body2 font-outfit text-white">
+            <strong :class="latestSubtitle.isAi ? 'text-positive' : 'text-warning'">
+              {{ latestSubtitle.speaker }}:
+            </strong>
+            <span> {{ latestSubtitle.text }}</span>
+          </div>
+        </div>
+
+        <!-- Painel Inferior de Controles da Chamada (Estilo WhatsApp) -->
+        <div class="call-bottom-controls flex items-center justify-center q-gutter-x-lg">
+          <!-- Alternar Câmera (Liga/Desliga) -->
+          <q-btn
+            round
+            unelevated
+            size="lg"
+            :color="isCameraOn ? 'dark' : 'grey-8'"
+            :icon="isCameraOn ? 'videocam' : 'videocam_off'"
+            class="border-all text-white shadow-4"
+            @click="toggleCamera"
+          >
+            <q-tooltip class="bg-grey-9 text-caption">
+              {{ isCameraOn ? 'Desativar Câmera' : 'Ativar Câmera' }}
+            </q-tooltip>
+          </q-btn>
+
+          <!-- Botão Principal de Desligar (Vermelho WhatsApp) -->
           <q-btn
             round
             unelevated
             size="xl"
             color="negative"
             icon="call_end"
-            class="shadow-6 q-mb-xs"
-            @click="declineCall"
-          />
-          <div class="text-caption text-grey-4 font-outfit">Recusar</div>
-        </div>
+            class="shadow-8 pulse-glow"
+            @click="hangupCall"
+          >
+            <q-tooltip class="bg-grey-9 text-caption">Encerrar Chamada</q-tooltip>
+          </q-btn>
 
-        <!-- Atender -->
-        <div class="text-center">
+          <!-- Microfone (Mute / Gravação) -->
           <q-btn
             round
             unelevated
-            size="xl"
-            color="positive"
-            text-color="dark"
-            icon="videocam"
-            class="shadow-6 pulse-glow q-mb-xs"
-            @click="answerCall"
-          />
-          <div class="text-caption text-white text-weight-bold font-outfit">Atender</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========================================================= -->
-    <!-- ESTADO 2: CHAMADA DE VÍDEO ATIVA (WHATSAPP VIDEO CALL)   -->
-    <!-- ========================================================= -->
-    <div v-else-if="callState === 'CONNECTED'" class="whatsapp-call-active flex flex-column justify-between relative-position">
-      <!-- Barra Superior da Chamada (Estilo WhatsApp) -->
-      <div class="call-top-bar q-pa-md flex items-center justify-between z-top">
-        <div class="flex items-center q-gutter-x-sm">
-          <q-avatar size="36px">
-            <img :src="selectedPersona.avatar" :alt="selectedPersona.name" />
-          </q-avatar>
-          <div>
-            <div class="text-subtitle2 text-weight-bold font-outfit text-white line-height-tight">
-              {{ selectedPersona.name }}
-            </div>
-            <div class="text-caption text-positive font-mono text-weight-bold">
-              {{ formatSeconds(callSeconds) }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Botões de Controle Superior (Legendas & Dicas) -->
-        <div class="flex items-center q-gutter-x-xs">
-          <!-- Toggle Legendas / Closed Captions -->
-          <q-btn
-            round
-            flat
-            dense
-            size="sm"
-            :color="showSubtitles ? 'positive' : 'grey-5'"
-            :icon="showSubtitles ? 'subtitles' : 'subtitles_off'"
-            @click="showSubtitles = !showSubtitles"
+            size="lg"
+            :color="isUserListening ? 'positive' : 'grey-8'"
+            :text-color="isUserListening ? 'dark' : 'white'"
+            :icon="isUserListening ? 'mic' : 'mic_off'"
+            class="border-all shadow-4"
+            @click="toggleUserMic"
           >
             <q-tooltip class="bg-grey-9 text-caption">
-              {{ showSubtitles ? 'Ocultar legendas' : 'Mostrar legendas em inglês' }}
+              {{ isUserListening ? 'Microfone Ativo (Ouvindo)' : 'Ativar Microfone' }}
             </q-tooltip>
           </q-btn>
-
-          <!-- Botão Dicas de Resposta (Se Travar) -->
-          <q-btn
-            round
-            flat
-            dense
-            size="sm"
-            color="amber-9"
-            icon="lightbulb"
-            @click="showHintsModal = true"
-          >
-            <q-tooltip class="bg-grey-9 text-caption">Ideias do que falar (Dicas)</q-tooltip>
-          </q-btn>
         </div>
       </div>
-
-      <!-- Centro: Vídeo / Avatar da Pessoa Remota -->
-      <div class="remote-video-container flex flex-center col relative-position">
-        <div class="text-center relative-position">
-          <div class="avatar-remote-halo" :class="{ 'speaking-active': isAiSpeaking }">
-            <q-avatar size="160px" class="shadow-10">
-              <img :src="selectedPersona.avatar" :alt="selectedPersona.name" />
-            </q-avatar>
-          </div>
-
-          <!-- Indicador de Status da IA (Falando / Ouvindo) -->
-          <div class="q-mt-md">
-            <q-badge
-              v-if="isAiSpeaking"
-              color="positive"
-              text-color="dark"
-              class="font-outfit text-weight-bold q-py-xs q-px-md rounded-borders animate-pulse"
-            >
-              <q-icon name="volume_up" size="14px" class="q-mr-xs" />
-              <span>{{ selectedPersona.name }} está falando...</span>
-            </q-badge>
-            <q-badge
-              v-else-if="isUserListening"
-              color="amber-9"
-              text-color="dark"
-              class="font-outfit text-weight-bold q-py-xs q-px-md rounded-borders animate-pulse"
-            >
-              <q-icon name="mic" size="14px" class="q-mr-xs" />
-              <span>Ouvindo sua voz... Fale agora!</span>
-            </q-badge>
-            <q-badge
-              v-else
-              color="grey-9"
-              text-color="grey-4"
-              class="font-outfit q-py-xs q-px-sm rounded-borders"
-            >
-              <span>Conectado</span>
-            </q-badge>
-          </div>
-        </div>
-
-        <!-- Janela PiP da Câmera do Usuário (Canto Superior Direito) -->
-        <div class="local-camera-pip shadow-8">
-          <video
-            ref="localVideoRef"
-            autoplay
-            playsinline
-            muted
-            class="local-video-element"
-            :class="{ 'video-disabled': !isCameraOn }"
-          ></video>
-          <div v-if="!isCameraOn" class="camera-off-placeholder flex flex-center">
-            <q-avatar size="38px" color="deep-purple-9" text-color="white" class="shadow-4 text-weight-bold font-outfit">
-              {{ authStore.userAvatar || '💻' }}
-            </q-avatar>
-          </div>
-          <div class="pip-label">{{ authStore.displayName || 'Você' }}</div>
-        </div>
-      </div>
-
-      <!-- Legendas em Tempo Real (Subtitles Overlay) -->
-      <div v-if="showSubtitles && latestSubtitle" class="subtitles-overlay q-pa-md text-center z-top animate-fade-in">
-        <div class="subtitles-bubble q-pa-sm rounded-borders text-body2 font-outfit text-white">
-          <strong :class="latestSubtitle.isAi ? 'text-positive' : 'text-warning'">
-            {{ latestSubtitle.speaker }}:
-          </strong>
-          <span> {{ latestSubtitle.text }}</span>
-        </div>
-      </div>
-
-      <!-- Painel Inferior de Controles da Chamada (Estilo WhatsApp) -->
-      <div class="call-bottom-controls q-pa-lg flex items-center justify-center q-gutter-x-lg z-top">
-        <!-- Alternar Câmera (Liga/Desliga) -->
-        <q-btn
-          round
-          unelevated
-          size="lg"
-          :color="isCameraOn ? 'dark' : 'grey-8'"
-          :icon="isCameraOn ? 'videocam' : 'videocam_off'"
-          class="border-all text-white shadow-4"
-          @click="toggleCamera"
-        >
-          <q-tooltip class="bg-grey-9 text-caption">
-            {{ isCameraOn ? 'Desativar Câmera' : 'Ativar Câmera' }}
-          </q-tooltip>
-        </q-btn>
-
-        <!-- Botão Principal de Desligar (Vermelho WhatsApp) -->
-        <q-btn
-          round
-          unelevated
-          size="xl"
-          color="negative"
-          icon="call_end"
-          class="shadow-8 pulse-glow"
-          @click="hangupCall"
-        >
-          <q-tooltip class="bg-grey-9 text-caption">Encerrar Chamada</q-tooltip>
-        </q-btn>
-
-        <!-- Microfone (Mute / Gravação) -->
-        <q-btn
-          round
-          unelevated
-          size="lg"
-          :color="isUserListening ? 'positive' : 'grey-8'"
-          :text-color="isUserListening ? 'dark' : 'white'"
-          :icon="isUserListening ? 'mic' : 'mic_off'"
-          class="border-all shadow-4"
-          @click="toggleUserMic"
-        >
-          <q-tooltip class="bg-grey-9 text-caption">
-            {{ isUserListening ? 'Microfone Ativo (Ouvindo)' : 'Ativar Microfone' }}
-          </q-tooltip>
-        </q-btn>
-      </div>
-    </div>
+    </teleport>
 
     <!-- ========================================================= -->
     <!-- ESTADO 3: CHAMADA ENCERRADA (RELATÓRIO & FEEDBACK DE VOZ) -->
     <!-- ========================================================= -->
-    <div v-else-if="callState === 'ENDED'" class="q-pa-md max-width-container animate-slide-up">
+    <div v-if="callState === 'ENDED'" class="q-pa-md max-width-container animate-slide-up">
       <div class="glass-card q-pa-xl text-center border-all">
         <div class="q-mb-md flex justify-center">
           <q-avatar size="80px" color="positive" text-color="dark" class="shadow-6 pulse-glow">
@@ -465,7 +468,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount } from 'vue'
+import { ref, computed, nextTick, onBeforeUnmount } from 'vue'
 import { CALL_PERSONAS, aiCallService } from '../services/aiCallService'
 import { callSoundEffects } from '../services/callRingtone'
 import { speechService } from '../services/speech'
@@ -503,6 +506,13 @@ const transcriptList = ref([])
 const showHintsModal = ref(false)
 const currentHints = ref([])
 
+// Formata texto interpolando o nome do usuário ativo (eliminando qualquer fallback rígido como "Gabriel" ou tag bruta)
+function formatUserText(text) {
+  if (!text) return ''
+  const name = authStore.displayName || 'Dev'
+  return text.replace(/\{userName\}|\bGabriel\b/g, name)
+}
+
 // Receber chamada com ringtone
 function triggerIncomingCall(persona) {
   selectedPersona.value = persona
@@ -529,6 +539,9 @@ async function answerCall() {
   callSeconds.value = 0
   transcriptList.value = []
 
+  // Aguarda montagem dos nós teleportados no DOM
+  await nextTick()
+
   // Inicializa temporizador da chamada
   if (callTimer) clearInterval(callTimer)
   callTimer = setInterval(() => {
@@ -538,11 +551,11 @@ async function answerCall() {
   // Inicia captura de câmera e microfone
   await startLocalCamera()
 
-  // Inicializa a persona no serviço de IA
+  // Inicializa a persona no serviço de IA com o nome real do usuário
   aiCallService.initCall(selectedPersona.value, authStore.displayName)
-  currentHints.value = selectedPersona.value.suggestions || []
+  currentHints.value = (selectedPersona.value.suggestions || []).map(formatUserText)
 
-  // IA fala a primeira saudação
+  // IA fala a primeira saudação formatada
   speakAiLine(selectedPersona.value.initialGreeting)
 }
 
@@ -582,16 +595,17 @@ function toggleCamera() {
 
 // IA pronuncia sua fala e depois ativa o microfone do usuário
 async function speakAiLine(text) {
+  const formattedText = formatUserText(text)
   isAiSpeaking.value = true
   latestSubtitle.value = {
     speaker: selectedPersona.value.name,
-    text,
+    text: formattedText,
     isAi: true
   }
 
   try {
     await speechService.speak(
-      text,
+      formattedText,
       selectedPersona.value.accent,
       settingsStore.speed
     )
@@ -618,7 +632,7 @@ function startListeningToUser() {
 
       isUserListening.value = false
       latestSubtitle.value = {
-        speaker: 'Você',
+        speaker: authStore.displayName || 'Você',
         text: recognizedText,
         isAi: false
       }
@@ -632,7 +646,7 @@ function startListeningToUser() {
           authStore.displayName
         )
 
-        currentHints.value = response.hints || []
+        currentHints.value = (response.hints || []).map(formatUserText)
         speakAiLine(response.reply)
       } catch (err) {
         console.error('Erro na resposta da IA:', err)
@@ -662,19 +676,20 @@ function toggleUserMic() {
 // Usa uma dica do modal para responder
 function useHint(hintText) {
   showHintsModal.value = false
+  const formattedHint = formatUserText(hintText)
   latestSubtitle.value = {
-    speaker: 'Você',
-    text: hintText,
+    speaker: authStore.displayName || 'Você',
+    text: formattedHint,
     isAi: false
   }
 
   aiCallService.getResponse(
     selectedPersona.value,
-    hintText,
+    formattedHint,
     settingsStore.geminiApiKey || '',
     authStore.displayName
   ).then(response => {
-    currentHints.value = response.hints || []
+    currentHints.value = (response.hints || []).map(formatUserText)
     speakAiLine(response.reply)
   })
 }
@@ -696,7 +711,11 @@ function hangupCall() {
     localMediaStream = null
   }
 
-  transcriptList.value = [...aiCallService.conversationHistory]
+  transcriptList.value = aiCallService.conversationHistory.map(item => ({
+    ...item,
+    text: formatUserText(item.text),
+    speaker: item.role === 'user' ? (authStore.displayName || 'Você') : item.speaker
+  }))
   callState.value = 'ENDED'
 
   // Salva métricas de estudo (+5 minutos de conversação)
@@ -758,26 +777,29 @@ onBeforeUnmount(() => {
 /* Tela de Ringing WhatsApp */
 .whatsapp-fullscreen-ringing {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background: radial-gradient(circle at center, #11281e 0%, #0b141a 100%);
-  z-index: 9999;
+  z-index: 2500;
+  padding: max(20px, env(safe-area-inset-top)) 16px max(32px, env(safe-area-inset-bottom)) 16px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .avatar-ripple-container {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 130px;
+  height: 130px;
 }
 
 .ripple {
   position: absolute;
   top: 0;
   left: 0;
-  width: 140px;
-  height: 140px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   border: 2px solid rgba(37, 211, 102, 0.6);
   animation: pulse-ring 2s infinite ease-out;
@@ -791,29 +813,39 @@ onBeforeUnmount(() => {
   100% { transform: scale(2.2); opacity: 0; }
 }
 
-/* Tela Ativa de Chamada de Vídeo */
+/* Tela Ativa de Chamada de Vídeo (WhatsApp Fullscreen) */
 .whatsapp-call-active {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background: #0b141a;
-  z-index: 9999;
+  z-index: 2500;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .call-top-bar {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+  padding-top: max(8px, env(safe-area-inset-top));
+  flex-shrink: 0;
+  z-index: 40;
 }
 
 .remote-video-container {
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
+  position: relative;
 }
 
 .avatar-remote-halo {
   border-radius: 50%;
-  padding: 8px;
+  padding: 6px;
   display: inline-block;
   transition: all 0.3s ease;
 
@@ -829,22 +861,25 @@ onBeforeUnmount(() => {
   50% { transform: scale(1.05); }
 }
 
-/* Janela PiP da Câmera do Usuário */
+/* Janela PiP da Câmera do Usuário (posicionada abaixo da barra superior) */
 .local-camera-pip {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 120px;
-  height: 160px;
+  top: calc(max(10px, env(safe-area-inset-top)) + 54px);
+  right: 14px;
+  width: 96px;
+  height: 130px;
   border-radius: 12px;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.35);
   background: #1f2c34;
-  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 30;
 
   @media (max-width: 600px) {
-    width: 90px;
-    height: 120px;
+    top: calc(max(8px, env(safe-area-inset-top)) + 50px);
+    right: 10px;
+    width: 82px;
+    height: 112px;
   }
 }
 
@@ -883,19 +918,30 @@ onBeforeUnmount(() => {
   bottom: 110px;
   left: 0;
   width: 100%;
+  padding: 0 16px;
+  pointer-events: none;
+  z-index: 35;
 }
 
 .subtitles-bubble {
-  background: rgba(11, 20, 26, 0.85);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(11, 20, 26, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
   display: inline-block;
-  max-width: 90%;
+  max-width: 92%;
+  border-radius: 12px;
+  pointer-events: auto;
 }
 
 /* Controles Inferiores */
 .call-bottom-controls {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  padding-top: 14px;
+  padding-bottom: max(24px, calc(env(safe-area-inset-bottom) + 14px));
+  flex-shrink: 0;
+  z-index: 40;
 }
 
 .max-w-600 {

@@ -6,9 +6,9 @@
     transition-show="slide-up"
     transition-hide="slide-down"
   >
-    <div class="hands-free-container flex flex-column justify-between q-pa-lg text-white">
+    <div class="hands-free-container text-white">
       <!-- Barra Superior: Fechar / Minimizar & Configurações Rápidas -->
-      <div class="row items-center justify-between q-mb-md">
+      <div class="hands-free-header row items-center justify-between q-mb-sm">
         <div class="flex items-center q-gutter-x-sm">
           <q-btn
             round
@@ -22,10 +22,10 @@
             <q-tooltip class="bg-grey-9 text-caption">Fechar Modo Mãos-Livres</q-tooltip>
           </q-btn>
           <div>
-            <div class="text-caption text-accent text-weight-bold uppercase font-outfit">
-              Modo Mãos-Livres (Hands-Free Walk & Listen) 🎧
+            <div class="text-caption text-accent text-weight-bold uppercase font-outfit text-xs">
+              Modo Mãos-Livres 🎧
             </div>
-            <div class="text-subtitle1 text-weight-bold font-outfit text-white">
+            <div class="text-subtitle1 text-weight-bold font-outfit text-white text-truncate" style="max-width: 220px;">
               Dia {{ lesson.day }}: {{ lesson.title }}
             </div>
           </div>
@@ -43,32 +43,32 @@
         </div>
       </div>
 
-      <!-- Centro: Card de Alta Visibilidade (Texto Grande & Contraste) -->
-      <div class="flex flex-center col q-my-md">
-        <div class="hands-free-stage q-pa-xl text-center full-width relative-position">
+      <!-- Centro: Card de Alta Visibilidade (Texto Grande & Contraste, sem sobreposição) -->
+      <div class="hands-free-stage-wrapper">
+        <div class="hands-free-stage text-center relative-position">
           <!-- Categoria do item atual -->
-          <div class="text-caption text-weight-bold uppercase font-outfit q-mb-sm" :class="itemBadgeColor">
+          <div class="text-caption text-weight-bold uppercase font-outfit q-mb-xs" :class="itemBadgeColor">
             <q-icon :name="itemBadgeIcon" size="16px" class="q-mr-xs" />
             <span>{{ currentItem?.categoryLabel || 'Prática Oral' }} • {{ currentIndex + 1 }} de {{ playlist.length }}</span>
           </div>
 
-          <!-- Texto em Inglês em Fonte Gigante -->
-          <div class="text-h4 text-weight-bold font-outfit text-white q-my-md leading-normal tracking-wide animate-fade-in">
+          <!-- Texto em Inglês com tipografia responsiva -->
+          <div class="stage-text-en font-outfit text-white q-my-sm leading-normal tracking-wide animate-fade-in">
             {{ currentItem?.text }}
           </div>
 
           <!-- Tradução em Português -->
           <div
-            v-if="includePortuguese"
-            class="text-h6 text-grey-4 font-outfit italic q-my-sm animate-fade-in"
+            v-if="includePortuguese && currentItem?.translation"
+            class="stage-text-pt text-grey-4 font-outfit italic q-my-xs animate-fade-in"
           >
             "{{ currentItem?.translation }}"
           </div>
 
           <!-- Barra de Contagem de Silêncio para Repetição -->
-          <div v-if="playbackState === 'WAITING_REPETITION'" class="repetition-prompt q-mt-lg animate-fade-in">
-            <div class="text-subtitle1 text-warning font-outfit text-weight-bold flex items-center justify-center q-mb-xs">
-              <q-icon name="record_voice_over" size="20px" class="q-mr-xs animate-pulse" />
+          <div v-if="playbackState === 'WAITING_REPETITION'" class="repetition-prompt q-mt-md animate-fade-in">
+            <div class="text-subtitle2 text-warning font-outfit text-weight-bold flex items-center justify-center q-mb-xs">
+              <q-icon name="record_voice_over" size="18px" class="q-mr-xs animate-pulse" />
               <span>Sua vez: Repita em voz alta agora!</span>
             </div>
             <q-linear-progress
@@ -76,19 +76,19 @@
               color="warning"
               track-color="grey-9"
               class="rounded-borders q-mx-auto"
-              style="max-width: 300px; height: 8px;"
+              style="max-width: 260px; height: 6px;"
             />
           </div>
         </div>
       </div>
 
-      <!-- Painel Inferior: Controles de Áudio Grandes e Opções Rápidas -->
-      <div class="hands-free-controls q-pa-md rounded-borders border-all bg-dark-glass">
+      <!-- Painel Inferior: Controles de Áudio Grandes e Opções Rápidas (Fixado abaixo, sem invadir texto) -->
+      <div class="hands-free-controls border-all bg-dark-glass">
         <!-- Linha 1: Opções de Ajuste (Silêncio, Tradução, Loop) -->
-        <div class="row items-center justify-between q-col-gutter-sm q-mb-md">
+        <div class="row items-center justify-between q-col-gutter-xs q-mb-sm">
           <!-- Tempo de Silêncio para Repetir -->
-          <div class="flex items-center q-gutter-x-xs">
-            <span class="text-caption text-grey-4 font-outfit">Pausa p/ Repetir:</span>
+          <div class="col-12 col-sm-auto flex items-center justify-center q-gutter-x-xs q-mb-xs">
+            <span class="text-caption text-grey-4 font-outfit text-xs">Pausa:</span>
             <q-btn-toggle
               v-model="pauseDuration"
               dense
@@ -97,7 +97,7 @@
               toggle-color="accent"
               color="dark"
               text-color="grey-4"
-              size="sm"
+              size="xs"
               :options="[
                 { label: '2s', value: 2 },
                 { label: '3s', value: 3 },
@@ -108,27 +108,27 @@
           </div>
 
           <!-- Toggles: Tradução & Loop -->
-          <div class="flex items-center q-gutter-x-sm">
+          <div class="col-12 col-sm-auto flex items-center justify-center q-gutter-x-md">
             <q-toggle
               v-model="includePortuguese"
               dense
               color="accent"
-              label="Falar Tradução"
-              class="text-caption text-grey-4 font-outfit"
+              label="Tradução"
+              class="text-caption text-grey-4 font-outfit text-xs"
             />
             <q-toggle
               v-model="loopPlaylist"
               dense
               color="positive"
-              label="Repetir em Loop"
-              class="text-caption text-grey-4 font-outfit"
+              label="Repetir Loop"
+              class="text-caption text-grey-4 font-outfit text-xs"
             />
           </div>
         </div>
 
         <!-- Linha 2: Barra de Progresso Geral da Lição -->
-        <div class="q-mb-md">
-          <div class="flex justify-between text-caption text-grey-5 font-outfit q-mb-xs">
+        <div class="q-mb-sm">
+          <div class="flex justify-between text-caption text-grey-5 font-outfit q-mb-xs text-xs">
             <span>Progresso da Lição</span>
             <span>{{ currentIndex + 1 }} / {{ playlist.length }}</span>
           </div>
@@ -137,19 +137,19 @@
             color="accent"
             track-color="grey-9"
             class="rounded-borders"
-            style="height: 6px;"
+            style="height: 4px;"
           />
         </div>
 
-        <!-- Linha 3: Controles de Playback Grandes e Fáceis de Tocar -->
-        <div class="flex items-center justify-center q-gutter-x-lg">
+        <!-- Linha 3: Controles de Playback Fáceis de Tocar -->
+        <div class="flex items-center justify-center q-gutter-x-md">
           <!-- Frase Anterior -->
           <q-btn
             round
             unelevated
             color="dark"
             icon="skip_previous"
-            size="lg"
+            size="md"
             class="border-all text-grey-3"
             :disable="currentIndex === 0"
             @click="prevItem"
@@ -157,13 +157,13 @@
             <q-tooltip class="bg-grey-9 text-caption">Anterior</q-tooltip>
           </q-btn>
 
-          <!-- Play / Pause Principal Gigante -->
+          <!-- Play / Pause Principal -->
           <q-btn
             round
             unelevated
             :color="isPlaying ? 'warning' : 'accent'"
             :icon="isPlaying ? 'pause' : 'play_arrow'"
-            size="xl"
+            size="lg"
             class="pulse-glow shadow-6"
             @click="togglePlayPause"
           >
@@ -178,7 +178,7 @@
             unelevated
             color="dark"
             icon="skip_next"
-            size="lg"
+            size="md"
             class="border-all text-grey-3"
             :disable="currentIndex >= playlist.length - 1 && !loopPlaylist"
             @click="nextItem"
@@ -507,7 +507,29 @@ onBeforeUnmount(() => {
 .hands-free-container {
   background: radial-gradient(circle at center, #1b1333 0%, #0c0817 100%);
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: max(12px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)) 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.hands-free-header {
+  flex-shrink: 0;
+}
+
+.hands-free-stage-wrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  margin: auto 0;
+  overflow-y: auto;
 }
 
 .hands-free-stage {
@@ -516,6 +538,33 @@ onBeforeUnmount(() => {
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   max-width: 800px;
+  width: 100%;
+  padding: 20px 16px;
+  box-sizing: border-box;
+}
+
+.stage-text-en {
+  font-size: clamp(1.15rem, 3.8vw, 1.85rem);
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.stage-text-pt {
+  font-size: clamp(0.85rem, 2.5vw, 1.15rem);
+  line-height: 1.3;
+}
+
+.hands-free-controls {
+  flex-shrink: 0;
+  background: rgba(18, 14, 30, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  box-sizing: border-box;
 }
 
 .border-all {
@@ -525,9 +574,6 @@ onBeforeUnmount(() => {
 .bg-dark-glass {
   background: rgba(18, 14, 30, 0.85);
   backdrop-filter: blur(12px);
-  max-width: 800px;
-  margin: 0 auto;
-  width: 100%;
 }
 
 .leading-normal {
