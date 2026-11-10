@@ -39,6 +39,11 @@ const routes = [
         component: () => import('../pages/AchievementsPage.vue')
       },
       {
+        path: 'daily-simulator',
+        name: 'daily-simulator',
+        component: () => import('../pages/DailySimulatorPage.vue')
+      },
+      {
         path: 'settings',
         name: 'settings',
         component: () => import('../pages/SettingsPage.vue')

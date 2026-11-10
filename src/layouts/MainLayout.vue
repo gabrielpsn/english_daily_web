@@ -71,7 +71,7 @@
 
       <q-list class="q-px-sm">
         <q-item
-          v-for="item in menuItems"
+          v-for="item in drawerMenuItems"
           :key="item.route"
           clickable
           :to="{ name: item.route }"
@@ -104,7 +104,7 @@
         dense
       >
         <q-route-tab
-          v-for="item in menuItems"
+          v-for="item in mobileMenuItems"
           :key="item.route"
           :to="{ name: item.route }"
           exact
@@ -140,13 +140,23 @@ const authStore = useAuthStore()
 const leftDrawerOpen = ref(false)
 const activeTab = ref('dashboard')
 
-// Menu e abas
-const menuItems = [
-  { label: 'Painel Geral', labelMobile: 'Dashboard', icon: 'dashboard', route: 'dashboard' },
-  { label: 'Aulas diárias', labelMobile: 'Aulas', icon: 'menu_book', route: 'lessons' },
-  { label: 'Minha Evolução', labelMobile: 'Estatísticas', icon: 'bar_chart', route: 'statistics' },
-  { label: 'Minhas Conquistas', labelMobile: 'Badges', icon: 'military_tech', route: 'achievements' },
-  { label: 'Preferências', labelMobile: 'Ajustes', icon: 'settings', route: 'settings' }
+// Itens do menu Desktop Lateral
+const drawerMenuItems = [
+  { label: 'Painel Geral', icon: 'dashboard', route: 'dashboard' },
+  { label: 'Aulas diárias', icon: 'menu_book', route: 'lessons' },
+  { label: 'Daily Scrum Simulator', icon: 'groups', route: 'daily-simulator' },
+  { label: 'Minha Evolução', icon: 'bar_chart', route: 'statistics' },
+  { label: 'Minhas Conquistas', icon: 'military_tech', route: 'achievements' },
+  { label: 'Preferências', icon: 'settings', route: 'settings' }
+]
+
+// Itens da barra inferior Mobile (5 abas balanceadas)
+const mobileMenuItems = [
+  { labelMobile: 'Home', icon: 'dashboard', route: 'dashboard' },
+  { labelMobile: 'Aulas', icon: 'menu_book', route: 'lessons' },
+  { labelMobile: 'Daily', icon: 'groups', route: 'daily-simulator' },
+  { labelMobile: 'Stats', icon: 'bar_chart', route: 'statistics' },
+  { labelMobile: 'Ajustes', icon: 'settings', route: 'settings' }
 ]
 
 function toggleLeftDrawer() {

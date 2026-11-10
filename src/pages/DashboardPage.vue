@@ -105,6 +105,34 @@
     <!-- Habit Grid Estilo GitHub para Devs (Componente Modular) -->
     <ConsistencyHeatmap :study-dates="studyStore.studyDates" />
 
+    <!-- Banner Interativo: Daily Scrum Simulator -->
+    <div class="glass-card q-pa-md border-all flex items-center justify-between q-col-gutter-sm bg-gradient-scrum">
+      <div class="flex items-center q-gutter-x-md">
+        <q-avatar size="52px" color="accent" text-color="white" class="shadow-4">
+          <q-icon name="support_agent" size="30px" />
+        </q-avatar>
+        <div>
+          <div class="text-subtitle1 text-weight-bold font-outfit text-white flex items-center">
+            <span>Simulador de Daily Scrum (Tech Lead Alex)</span>
+            <q-badge color="accent" class="q-ml-sm text-caption text-weight-bold font-outfit">
+              Prática Ágil 🚀
+            </q-badge>
+          </div>
+          <p class="text-caption text-grey-4 q-my-none">
+            Simule a reunião diária de um time internacional (Yesterday, Today, Blockers) com reconhecimento de voz.
+          </p>
+        </div>
+      </div>
+      <q-btn
+        unelevated
+        color="accent"
+        icon="groups"
+        label="Entrar na Daily (2 Min)"
+        class="font-outfit text-weight-bold rounded-borders q-py-sm q-px-lg pulse-glow"
+        :to="{ name: 'daily-simulator' }"
+      />
+    </div>
+
     <!-- Seção Inferior: Próxima Aula & Flashcards -->
     <div class="row q-col-gutter-lg">
       <!-- Próxima Aula Card -->
@@ -216,5 +244,12 @@ const lastStudyText = computed(() => {
 }
 .uppercase {
   text-transform: uppercase;
+}
+.border-all {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.bg-gradient-scrum {
+  background: linear-gradient(135deg, rgba(149, 117, 205, 0.12) 0%, rgba(20, 15, 36, 0.8) 100%);
+  border-radius: 14px;
 }
 </style>

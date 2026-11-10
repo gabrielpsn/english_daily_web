@@ -12,7 +12,8 @@ export const useStudyStore = defineStore('study', {
     streak: 0,           // Quantidade de dias seguidos estudando
     totalMinutes: 0,     // Tempo total estudado em minutos acumulados
     flashcards: {},      // Progresso Leitner SRS: { [word]: { box, interval, nextReview, reviews } }
-    shadowingSessions: {} // Sessões de shadowing por dia: { [day]: count }
+    shadowingSessions: {}, // Sessões de shadowing por dia: { [day]: count }
+    scrumSessionsCount: 0 // Quantidade de simulações de Daily Scrum concluídas
   }),
 
   getters: {
@@ -88,6 +89,7 @@ export const useStudyStore = defineStore('study', {
         if (saved.totalMinutes) this.totalMinutes = saved.totalMinutes
         if (saved.flashcards) this.flashcards = saved.flashcards
         if (saved.shadowingSessions) this.shadowingSessions = saved.shadowingSessions
+        if (typeof saved.scrumSessionsCount === 'number') this.scrumSessionsCount = saved.scrumSessionsCount
       }
       this.recalculateActiveStreak()
     },
@@ -104,6 +106,7 @@ export const useStudyStore = defineStore('study', {
       saved.totalMinutes = this.totalMinutes
       saved.flashcards = this.flashcards
       saved.shadowingSessions = this.shadowingSessions
+      saved.scrumSessionsCount = this.scrumSessionsCount
       storageService.save(saved)
 
       // Sincroniza diretamente com o Supabase se logado
@@ -305,6 +308,16 @@ export const useStudyStore = defineStore('study', {
     },
 
     /**
+     * Registra a conclusão de uma simulação da Daily Scrum
+     */
+    recordScrumSimulation() {
+      this.scrumSessionsCount = (this.scrumSessionsCount || 0) + 1
+      this.totalMinutes += 5 // Soma 5 min de treino oral
+      this.registerStudyDate()
+      this.saveStudyData()
+    },
+
+    /**
      * Limpa todo o estado do Pinia e LocalStorage
      */
     resetAllData() {
@@ -315,6 +328,7 @@ export const useStudyStore = defineStore('study', {
       this.totalMinutes = 0
       this.flashcards = {}
       this.shadowingSessions = {}
+      this.scrumSessionsCount = 0
       
       storageService.reset()
     }

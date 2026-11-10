@@ -105,4 +105,14 @@ describe('study.js - Store de Estudos e Algoritmo SRS (Leitner)', () => {
     expect(store.shadowingSessions['2']).toBe(1)
     expect(store.totalShadowingSessions).toBe(3)
   })
+
+  it('deve registrar simulações de Daily Scrum e incrementar tempo de prática', () => {
+    const store = useStudyStore()
+    expect(store.scrumSessionsCount).toBe(0)
+    const initialMinutes = store.totalMinutes
+
+    store.recordScrumSimulation()
+    expect(store.scrumSessionsCount).toBe(1)
+    expect(store.totalMinutes).toBe(initialMinutes + 5)
+  })
 })
